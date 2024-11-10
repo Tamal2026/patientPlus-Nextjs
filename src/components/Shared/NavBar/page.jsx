@@ -14,7 +14,7 @@ export default function NavBar() {
     { name: "Our Experts", href: "/experts" },
     { name: "Services", href: "/Service" },
     { name: "Blog", href: "/Blog" },
-    { name: "Contact us", href: "/contact" },
+    { name: "Contact us", href: "/Contact" },
   ];
 
   const NavLink = ({ name, href, delay }) => (
