@@ -1,4 +1,8 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {};
+/* eslint-disable import/no-anonymous-default-export */
 
-export default nextConfig;
+export default {
+    images: {
+      domains: ['i.ibb.co'], 
+    },
+  };
+  
