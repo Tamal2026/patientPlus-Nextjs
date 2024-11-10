@@ -8,7 +8,7 @@ export default function Page() {
         {/* Left Side: Image */}
         <div className="w-full lg:w-1/2 mb-8 lg:mb-0">
           <img
-            src="path_to_your_image_here.jpg" // Replace with your image path or URL
+            src="path_to_your_image_here.jpg" 
             alt="Special Health Services"
             className="w-full h-auto rounded-lg shadow-md"
           />
