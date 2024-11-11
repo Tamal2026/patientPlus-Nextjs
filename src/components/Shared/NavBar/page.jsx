@@ -9,12 +9,13 @@ export default function NavBar() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Pages", href: "/pages" },
+
     { name: "About us", href: "/about" },
     { name: "Our Experts", href: "/experts" },
     { name: "Services", href: "/Service" },
     { name: "Blog", href: "/Blog" },
     { name: "Contact us", href: "/Contact" },
+    { name: "Login", href: "/Login" },
   ];
 
   const NavLink = ({ name, href, delay }) => (
