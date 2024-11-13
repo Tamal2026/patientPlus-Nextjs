@@ -1,0 +1,215 @@
+
+     [
+      {
+        "title": "Neurology",
+        "img": "https://i.ibb.co.com/JdsbHyF/neurology.jpg",
+        "description": "Our Neurology department offers state-of-the-art diagnosis and treatment for all neurological disorders.",
+        "expertise": [
+          {
+            "name": "Dr. Jane Doe",
+            "img": "https://i.ibb.co.com/30ww63d/doc23.webp",
+            "specialist": "Neurologist",
+            "degree": "MD, Neurology",
+            "short_desc": "Expert in diagnosing and treating complex neurological conditions."
+          },
+          {
+            "name": "Dr. John Smith",
+            "img": "https://i.ibb.co.com/GtFKwFY/doc24.webp",
+            "specialist": "Neurosurgeon",
+            "degree": "MBBS, MS",
+            "short_desc": "Specializes in advanced neurosurgical procedures."
+          },
+          {
+            "name": "Dr. Emily Clark",
+            "img": "https://i.ibb.co.com/vv38S2Y/doc22.webp",
+            "specialist": "Pediatric Neurologist",
+            "degree": "MD, Pediatrics",
+            "short_desc": "Focused on neurological care for children."
+          },
+          {
+            "name": "Dr. Alan Brown",
+            "img": "https://i.ibb.co.com/YbydRTs/doc21.jpg",
+            "specialist": "Neurophysiologist",
+            "degree": "PhD, Neurophysiology",
+            "short_desc": "Specializes in neurodiagnostic testing and research."
+          }
+        ]
+      },
+      {
+        "title": "Cardiac Surgery",
+        "img": "https://i.ibb.co.com/52PYtGx/cardiac-surgery-open-chest-heart-procedure-1168612-352239.png",
+        "description": "Comprehensive care for patients with heart diseases, offering advanced surgical procedures.",
+        "expertise": [
+          {
+            "name": "Dr. Michael Lee",
+            "img": "https://i.ibb.co.com/B2PM7Gp/doc20.jpg",
+            "specialist": "Cardiothoracic Surgeon",
+            "degree": "MD, Cardiothoracic Surgery",
+            "short_desc": "Expert in heart and lung surgeries."
+          },
+          {
+            "name": "Dr. Sarah Johnson",
+            "img": "https://i.ibb.co.com/kVZhj3t/doc19.jpg",
+            "specialist": "Cardiac Anesthesiologist",
+            "degree": "MD, Anesthesiology",
+            "short_desc": "Provides specialized anesthesia care for cardiac surgeries."
+          },
+          {
+            "name": "Dr. Kevin Wong",
+            "img": "https://i.ibb.co.com/NKzyLsM/doc18.jpg",
+            "specialist": "Cardiologist",
+            "degree": "MD, Cardiology",
+            "short_desc": "Specializes in non-surgical cardiac care."
+          },
+          {
+            "name": "Dr. Laura Adams",
+            "img": "https://i.ibb.co.com/nB8WHQT/doc17.webp",
+            "specialist": "Perfusionist",
+            "degree": "BSc, Cardiovascular Perfusion",
+            "short_desc": "Operates heart-lung machines during surgeries."
+          }
+        ]
+      },
+      {
+        "title": "Bills and Insurance",
+        "img": "https://i.ibb.co.com/nc889pv/bills.jpg",
+        "description": "Dedicated to providing seamless billing and insurance assistance for all patients.",
+        "expertise": [
+          {
+            "name": "Ms. Linda Green",
+            "img": "https://i.ibb.co.com/9WGjj1G/doc16.jpg",
+            "specialist": "Billing Specialist",
+            "degree": "MBA, Healthcare Management",
+            "short_desc": "Expert in handling hospital billing processes."
+          },
+          {
+            "name": "Mr. James Carter",
+            "img": "https://i.ibb.co.com/KNG6nq6/doc15.jpg",
+            "specialist": "Insurance Coordinator",
+            "degree": "BA, Insurance Administration",
+            "short_desc": "Coordinates with insurance providers for claims."
+          },
+          {
+            "name": "Ms. Anna White",
+            "img": "https://i.ibb.co.com/n72RdzX/doc14.jpg",
+            "specialist": "Financial Counselor",
+            "degree": "BCom, Finance",
+            "short_desc": "Advises patients on payment options and financial assistance."
+          },
+          {
+            "name": "Mr. Robert King",
+            "img": "https://i.ibb.co.com/gmXQxB4/doc13.jpg",
+            "specialist": "Claims Specialist",
+            "degree": "Diploma, Medical Billing & Coding",
+            "short_desc": "Handles insurance claims and follow-ups."
+          }
+        ]
+      },
+      {
+        "title": "Cancer Screening",
+        "img": "https://i.ibb.co.com/WkqvkZG/cancer-screening.webp",
+        "description": "Early detection and comprehensive screening programs for various types of cancer.",
+        "expertise": [
+          {
+            "name": "Dr. Olivia Brown",
+            "img": "https://i.ibb.co.com/svMSWpb/doc12.jpg",
+            "specialist": "Oncologist",
+            "degree": "MD, Oncology",
+            "short_desc": "Expert in early cancer detection and treatment."
+          },
+          {
+            "name": "Dr. Ethan Moore",
+            "img": "https://i.ibb.co.com/nkXKBzK/doc11.jpg",
+            "specialist": "Radiologist",
+            "degree": "MD, Radiology",
+            "short_desc": "Specialist in imaging and diagnostic screenings."
+          },
+          {
+            "name": "Dr. Sophia Hall",
+            "img": "https://i.ibb.co.com/48xp5x7/doc10.jpg",
+            "specialist": "Pathologist",
+            "degree": "MD, Pathology",
+            "short_desc": "Analyzes samples to diagnose cancer."
+          },
+          {
+            "name": "Dr. Daniel Wilson",
+            "img": "https://i.ibb.co.com/R941yn6/doc9.jpg",
+            "specialist": "Hematologist",
+            "degree": "MD, Hematology",
+            "short_desc": "Specializes in blood-related cancers."
+          }
+        ]
+      },
+      {
+        "title": "Orthopedics",
+        "img": "https://i.ibb.co.com/XXznJ14/orthopaedics.png",
+        "description": "Comprehensive care for musculoskeletal issues, offering advanced orthopedic solutions.",
+        "expertise": [
+          {
+            "name": "Dr. Lisa Taylor",
+            "img": "https://i.ibb.co.com/Qk5pBS9/doc8.jpg",
+            "specialist": "Orthopedic Surgeon",
+            "degree": "MD, Orthopedics",
+            "short_desc": "Expert in joint replacement and trauma surgery."
+          },
+          {
+            "name": "Dr.Evana Taylor",
+            "img": "https://i.ibb.co.com/9yRqP0y/doc7.jpg",
+            "specialist": "Sports Medicine Specialist",
+            "degree": "MD, Sports Medicine",
+            "short_desc": "Focuses on sports injuries and rehabilitation."
+          },
+          {
+            "name": "Dr. Rachel Scott",
+            "img": "https://i.ibb.co.com/y8SmnHq/doc6.jpg",
+            "specialist": "Pediatric Orthopedist",
+            "degree": "MD, Pediatrics",
+            "short_desc": "Specializes in musculoskeletal issues in children."
+          },
+          {
+            "name": "Dr. Chris Turner",
+            "img": "https://i.ibb.co.com/pKxpxvM/doc5.jpg",
+            "specialist": "Physical Therapist",
+            "degree": "DPT, Physical Therapy",
+            "short_desc": "Provides therapy for injury recovery."
+          }
+        ]
+      },
+      {
+        "title": "Pediatrics",
+        "img": "https://i.ibb.co.com/0rKZ3sj/pediaatrics.jpg",
+        "description": "Specialized care for infants, children, and adolescents, focusing on their overall health and well-being.",
+        "expertise": [
+          {
+            "name": "Dr. Emma Davis",
+            "img": "https://i.ibb.co.com/FD9bzJ6/doc4.jpg",
+            "specialist": "Pediatrician",
+            "degree": "MD, Pediatrics",
+            "short_desc": "Provides general medical care for children."
+          },
+          {
+            "name": "Dr. Benjamin Walker",
+            "img": "https://i.ibb.co.com/0BKCF4M/doc3.jpg",
+            "specialist": "Neonatologist",
+            "degree": "MD, Neonatology",
+            "short_desc": "Specializes in care for newborns, especially premature babies."
+          },
+          {
+            "name": "Dr. Chloe Martinez",
+            "img": "https://i.ibb.co.com/JHdFQfx/doc1.jpg",
+            "specialist": "Pediatric Cardiologist",
+            "degree": "MD, Cardiology",
+            "short_desc": "Focuses on heart conditions in children."
+          },
+          {
+            "name": "Dr. Nathan Rivera",
+            "img": "https://i.ibb.co.com/V2g8Qmw/doc2.jpg",
+            "specialist": "Child Psychologist",
+            "degree": "PhD, Child Psychology",
+            "short_desc": "Supports children's mental health."
+          }
+        ]
+      }
+    ]
+  
+  

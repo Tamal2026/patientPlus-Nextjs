@@ -2,20 +2,27 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function NavBar() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session } = useSession();
+  useEffect(() => {
+    if (session) {
+      router.push("/");
+    }
+  }, [session, router]);
 
   const navLinks = [
     { name: "Home", href: "/" },
-
     { name: "About us", href: "/about" },
     { name: "Our Experts", href: "/experts" },
     { name: "Services", href: "/Service" },
     { name: "Blog", href: "/Blog" },
     { name: "Contact us", href: "/Contact" },
-    { name: "Login", href: "/Login" },
   ];
 
   const NavLink = ({ name, href, delay }) => (
@@ -58,6 +65,25 @@ export default function NavBar() {
               <NavLink key={link.name} {...link} delay={index * 0.1} />
             ))}
             <AppointmentButton />
+
+            {/* Show Login/Logout Button Based on Session */}
+            {session ? (
+              <button
+                onClick={() => signOut()}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link href="/Login">
+                <button
+                  onClick={() => signIn()}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                >
+                  Login
+                </button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -102,9 +128,27 @@ export default function NavBar() {
             >
               <AppointmentButton />
             </div>
+
+            {/* Show Login/Logout for Mobile */}
+            {session ? (
+              <button
+                onClick={() => signOut()}
+                className="w-full bg-red-600 text-white px-4 py-2 rounded-lg"
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                onClick={() => signIn()}
+                className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg"
+              >
+                Login
+              </button>
+            )}
           </div>
         )}
       </div>
+
       <style jsx>{`
         @keyframes fadeInUp {
           0% {

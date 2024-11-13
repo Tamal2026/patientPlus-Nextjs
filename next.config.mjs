@@ -3,6 +3,7 @@
 export default {
     images: {
       domains: ['i.ibb.co'], 
+     
     },
   };
   

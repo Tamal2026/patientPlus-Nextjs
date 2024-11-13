@@ -2,20 +2,19 @@
 
 import React, { useState, useEffect } from "react";
 
-
 const slides = [
   {
-    img: "https://via.placeholder.com/1200x600?text=Child+Care+1",
+    img: "https://i.ibb.co.com/qgqyypD/docto.png",
     title: "Expert Team",
     message: "We have a team of highly skilled professionals.",
   },
   {
-    img: "https://via.placeholder.com/1200x600?text=Child+Care+2",
+    img: "https://i.ibb.co.com/XkPfL9w/child-care.jpg",
     title: "Child Care",
     message: "Providing excellent care for your little ones.",
   },
   {
-    img: "https://via.placeholder.com/1200x600?text=Child+Care+3",
+    img: "https://i.ibb.co.com/fxfjqtC/newborn-baby.jpg",
     title: "Newborn Care",
     message: "Specialized care for newborns in a safe environment.",
   },
@@ -24,27 +23,26 @@ const slides = [
 export default function Page() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [fade, setFade] = useState(false);
-  const [slideDirection, setSlideDirection] = useState("left"); 
+  const [slideDirection, setSlideDirection] = useState("left");
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFade(true); 
-      setSlideDirection(currentSlide % 2 === 0 ? "left" : "right"); 
+      setFade(true);
+      setSlideDirection(currentSlide % 2 === 0 ? "left" : "right");
 
       setTimeout(() => {
         setCurrentSlide((prev) => (prev + 1) % slides.length);
-        setFade(false); 
-      }, 1000); 
-    }, 5000); 
+        setFade(false);
+      }, 1000);
+    }, 5000);
 
-    return () => clearInterval(interval); 
+    return () => clearInterval(interval);
   }, [currentSlide]);
 
   return (
-    <div className="relative h-screen overflow-hidden">
-   
+    <div className="relative max-w-screen-2xl h-screen overflow-hidden">
       <div
-        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
+        className={`absolute inset-0 bg-contain  bg-no-repeat bg-center transition-opacity duration-1000 ${
           fade ? "opacity-0" : "opacity-100"
         }`}
         style={{
@@ -52,7 +50,6 @@ export default function Page() {
         }}
       ></div>
 
-     
       <div
         className={`relative flex flex-col items-center justify-center h-full text-center text-white bg-black bg-opacity-50 transition-opacity duration-1000 ${
           fade ? "opacity-0" : "opacity-100"
