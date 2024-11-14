@@ -3,7 +3,7 @@
       {
         "title": "Neurology",
         "img": "https://i.ibb.co.com/JdsbHyF/neurology.jpg",
-        "description": "Our Neurology department offers state-of-the-art diagnosis and treatment for all neurological disorders.",
+        "description": "Our Neurology department provides comprehensive care for all neurological disorders, offering state-of-the-art diagnosis and treatment. Whether it's chronic migraines, epilepsy, or complex neurodegenerative conditions like Parkinson’s or Alzheimer’s, our experts are equipped with cutting-edge technology and a patient-centered approach to deliver exceptional care. From advanced imaging to specialized therapies, we aim to enhance the quality of life for our patients.",
         "expertise": [
           {
             "name": "Dr. Jane Doe",
@@ -38,7 +38,7 @@
       {
         "title": "Cardiac Surgery",
         "img": "https://i.ibb.co.com/52PYtGx/cardiac-surgery-open-chest-heart-procedure-1168612-352239.png",
-        "description": "Comprehensive care for patients with heart diseases, offering advanced surgical procedures.",
+        "description": "Our Cardiac Surgery department offers advanced, life-saving procedures for patients with heart conditions. From coronary artery bypass grafting (CABG) to valve repair and replacement, our team of skilled cardiothoracic surgeons uses the latest minimally invasive techniques. We provide holistic care that includes pre-operative evaluation, advanced imaging, and post-operative rehabilitation to ensure the best outcomes for our patients.",
         "expertise": [
           {
             "name": "Dr. Michael Lee",
@@ -73,7 +73,7 @@
       {
         "title": "Bills and Insurance",
         "img": "https://i.ibb.co.com/nc889pv/bills.jpg",
-        "description": "Dedicated to providing seamless billing and insurance assistance for all patients.",
+        "description": "Our Bills and Insurance department is dedicated to ensuring a seamless financial process for our patients. From handling complex insurance claims to providing transparent billing services, our team works tirelessly to minimize financial stress. We assist patients in understanding their coverage options, navigating claims, and setting up flexible payment plans to focus on their health rather than financial concerns.",
         "expertise": [
           {
             "name": "Ms. Linda Green",
@@ -108,7 +108,7 @@
       {
         "title": "Cancer Screening",
         "img": "https://i.ibb.co.com/WkqvkZG/cancer-screening.webp",
-        "description": "Early detection and comprehensive screening programs for various types of cancer.",
+        "description": "Our Cancer Screening department offers comprehensive screening programs designed for the early detection of various types of cancer. Utilizing advanced imaging and diagnostic techniques, we ensure prompt and accurate results. Early intervention is key, and our multidisciplinary team works closely to develop personalized care plans that maximize treatment success and improve patient outcomes.",
         "expertise": [
           {
             "name": "Dr. Olivia Brown",
@@ -143,7 +143,7 @@
       {
         "title": "Orthopedics",
         "img": "https://i.ibb.co.com/XXznJ14/orthopaedics.png",
-        "description": "Comprehensive care for musculoskeletal issues, offering advanced orthopedic solutions.",
+        "description": "The Orthopedics department provides cutting-edge solutions for musculoskeletal issues. From joint replacements to sports injury treatments, our team delivers personalized care tailored to each patient’s needs. We utilize advanced surgical and non-surgical techniques to restore mobility and improve quality of life. Whether it’s a complex trauma or a routine procedure, we’re here to support you every step of the way.",
         "expertise": [
           {
             "name": "Dr. Lisa Taylor",
@@ -178,7 +178,7 @@
       {
         "title": "Pediatrics",
         "img": "https://i.ibb.co.com/0rKZ3sj/pediaatrics.jpg",
-        "description": "Specialized care for infants, children, and adolescents, focusing on their overall health and well-being.",
+        "description": "Our Pediatrics department offers specialized care for infants, children, and adolescents, focusing on their physical, emotional, and developmental health. From routine check-ups to managing complex medical conditions, our pediatricians and specialists work collaboratively with families to ensure the best outcomes. We create a safe and nurturing environment to promote the well-being of every child",
         "expertise": [
           {
             "name": "Dr. Emma Davis",

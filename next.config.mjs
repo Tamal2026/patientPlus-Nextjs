@@ -1,9 +1,10 @@
-/* eslint-disable import/no-anonymous-default-export */
+// next.config.mjs
 
-export default {
-    images: {
-      domains: ['i.ibb.co'], 
-     
-    },
-  };
-  
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    domains: ['i.ibb.co'], // Add the specific domain you're using for images
+  },
+};
+
+export default nextConfig;

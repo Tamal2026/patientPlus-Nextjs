@@ -1,6 +1,7 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import { getServices } from "@/services/getServices";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   FaHeartbeat,
@@ -10,22 +11,22 @@ import {
 } from "react-icons/fa";
 
 export default function Page() {
-  const [servicesData, setServicesData] = useState([]); // State to store fetched data
+  const [servicesData, setServicesData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const getServices = async () => {
-    const res = await fetch("http://localhost:3000/ServicesApi/api/get-all");
-    const serviceApi = await res.json();
-    return serviceApi;
-  };
+  
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
+        setLoading(true); 
         const data = await getServices();
-        console.log("Fetched Data:", data.services); 
-        setServicesData(data.services); 
+        console.log("Fetched Data:", data.services);
+        setServicesData(data.services);
       } catch (error) {
         console.error("Failed to fetch services:", error);
+      } finally {
+        setLoading(false); 
       }
     };
 
@@ -66,7 +67,7 @@ export default function Page() {
           <img
             src="https://i.ibb.co.com/ZG0PCZb/doctor.png"
             alt="Doctor"
-            className="w-64 lg:w-3/4 object-cover "
+            className="w-64 lg:w-3/4 object-cover"
           />
         </div>
 
@@ -86,7 +87,6 @@ export default function Page() {
                 className="flex items-start space-x-4 p-4 rounded-lg shadow-md hover:bg-blue-50 transition duration-300"
               >
                 <div className="flex-shrink-0">{service.icon}</div>
-
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800">
                     {service.title}
@@ -100,25 +100,35 @@ export default function Page() {
       </div>
 
       {/* Render fetched data dynamically */}
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {servicesData.map((service, index) => (
-          <div
-            key={index}
-            className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300"
-          >
-            <img
-              src={service.img}
-              alt={service.title}
-              className="w-full h-60 object-fill rounded-md mb-4"
-            />
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">
-              {service.title}
-            </h3>
-            <p className="text-gray-600">{service.description}</p>
-            <button className=" bg-blue-500 text-white px-5 py-2 my-5">Learn More</button>
-          </div>
-        ))}
-      </div>
+      {loading ? (
+        <div className="flex justify-center items-center min-h-screen">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      ) : (
+        <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {servicesData.map((service, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300"
+            >
+              <img
+                src={service.img}
+                alt={service.title}
+                className="w-full h-60 object-fill rounded-md mb-4"
+              />
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                {service.title}
+              </h3>
+             
+              <Link href={`/ServiceDetailsPage/${service._id}`}>
+                <button className="bg-blue-500 text-white px-5 py-2 my-5">
+                  Learn More
+                </button>
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
