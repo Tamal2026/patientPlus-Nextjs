@@ -2,8 +2,9 @@
 
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
-export default function MyAppoinments() {
+export default function MyAppointments() {
   const [bookings, setBookings] = useState([]);
   const { data: session } = useSession();
 
@@ -29,14 +30,39 @@ export default function MyAppoinments() {
   }, [session]);
 
   const handleDelete = async (id) => {
-    const deleted = await fetch(
-      `http://localhost:3000/myAppoinments/api/deleteAppoinment/${id}`,
-      {
-        method: "DELETE",
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this Appoinment?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, cancle it!",
+      cancelButtonText: "No",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const res = await fetch(
+          `http://localhost:3000/myAppoinments/api/deleteAppoinment/${id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (res.ok) {
+          setBookings((prev) => prev.filter((booking) => booking._id !== id));
+          Swal.fire("Deleted!", "Your has been cancled.", "success");
+        } else {
+          throw new Error("Failed to delete booking");
+        }
+      } catch (error) {
+        console.error("Error deleting booking:", error);
+        Swal.fire("Error!", "Failed to delete booking.", "error");
       }
-    );
-    console.log(deleted);
+    }
   };
+
   return (
     <div className="mt-20 px-4">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">My Bookings</h2>
@@ -45,38 +71,22 @@ export default function MyAppoinments() {
           <thead>
             <tr className="bg-gray-100">
               <th className="border border-gray-300 px-4 py-2 text-left">#</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">
-                Doctor Name
-              </th>
-              <th className="border border-gray-300 px-4 py-2 text-left">
-                Date
-              </th>
-              <th className="border border-gray-300 px-4 py-2 text-left">
-                Time
-              </th>
-              <th className="border border-gray-300 px-4 py-2 text-center">
-                Action
-              </th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Doctor Name</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Date</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Time</th>
+              <th className="border border-gray-300 px-4 py-2 text-center">Action</th>
             </tr>
           </thead>
           <tbody>
             {Array.isArray(bookings) && bookings.length > 0 ? (
               bookings.map((booking, index) => (
                 <tr key={booking._id} className="hover:bg-gray-50">
-                  <td className="border border-gray-300 px-4 py-2">
-                    {index + 1}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {booking.doctor}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {booking.date}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {booking.time}
-                  </td>
+                  <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
+                  <td className="border border-gray-300 px-4 py-2">{booking.doctor}</td>
+                  <td className="border border-gray-300 px-4 py-2">{booking.date}</td>
+                  <td className="border border-gray-300 px-4 py-2">{booking.time}</td>
                   <td className="border border-gray-300 px-4 py-2 text-center flex items-center gap-10">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
                       Update
                     </button>
                     <button
@@ -90,10 +100,7 @@ export default function MyAppoinments() {
               ))
             ) : (
               <tr>
-                <td
-                  colSpan="5"
-                  className="border border-gray-300 px-4 py-2 text-center text-gray-500"
-                >
+                <td colSpan="5" className="border border-gray-300 px-4 py-2 text-center text-gray-500">
                   No bookings found.
                 </td>
               </tr>
