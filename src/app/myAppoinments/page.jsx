@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 
-export default function MyBookings() {
+export default function MyAppoinments() {
   const [bookings, setBookings] = useState([]);
   const { data: session } = useSession();
 
@@ -16,13 +16,8 @@ export default function MyBookings() {
           `http://localhost:3000/myAppoinments/api/${session?.user?.email}`
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch bookings");
-        }
-
         const data = await res.json();
 
-   
         setBookings(data?.bookings || []);
       } catch (error) {
         console.error("Error fetching bookings:", error);
@@ -33,6 +28,15 @@ export default function MyBookings() {
     fetchBookings();
   }, [session]);
 
+  const handleDelete = async (id) => {
+    const deleted = await fetch(
+      `http://localhost:3000/myAppoinments/api/deleteAppoinment/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+    console.log(deleted);
+  };
   return (
     <div className="mt-20 px-4">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">My Bookings</h2>
@@ -71,8 +75,14 @@ export default function MyBookings() {
                   <td className="border border-gray-300 px-4 py-2">
                     {booking.time}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2 text-center">
-                    <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+                  <td className="border border-gray-300 px-4 py-2 text-center flex items-center gap-10">
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+                      Update
+                    </button>
+                    <button
+                      onClick={() => handleDelete(booking._id)}
+                      className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                    >
                       Cancel
                     </button>
                   </td>
