@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
           <SessionProvider>
             <div>
               <NavBar></NavBar>
-              {children}
+              {children }
               <Footer></Footer>
             </div>
           </SessionProvider>

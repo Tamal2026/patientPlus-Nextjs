@@ -119,6 +119,9 @@ export default function Page() {
               <h3 className="text-xl font-semibold text-gray-800 mb-2">
                 {service.title}
               </h3>
+              <h3 className="text-md  text-gray-800 mb-2">
+                {service.short_desc}
+              </h3>
              
               <Link href={`/ServiceDetailsPage/${service._id}`}>
                 <button className="bg-blue-500 text-white px-5 py-2 my-5">

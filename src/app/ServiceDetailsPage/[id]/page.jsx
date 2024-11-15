@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 /* eslint-disable @next/next/no-img-element */
 const ServiceDetailsPage = async ({ params }) => {
@@ -38,7 +39,7 @@ const ServiceDetailsPage = async ({ params }) => {
           <hr />
 
           {/* Experts Section */}
-          <h1 className="text-2xl font-bold my-5 text-center bg-blue-500 p-3 text-white w-1/6 mx-auto rounded-lg">
+          <h1 className=" text-2xl font-bold my-5 text-center bg-blue-500 p-3 text-white  w-1/6 mx-auto rounded-lg sm:w-1/2">
             Experts
           </h1>
 
@@ -47,17 +48,19 @@ const ServiceDetailsPage = async ({ params }) => {
             {data.service.expertise?.map((expert, index) => (
               <div
                 key={index}
-                className="text-center transform my-5 shadow-2xl transition duration-300 hover:scale-105 hover:shadow-lg p-4 rounded-lg bg-white shadow-md"
+                className="text-center transform my-5 shadow-2xl transition duration-300 hover:scale-105 hover:shadow-lg p-4 rounded-lg bg-white "
               >
                 <img
                   alt={`Expert ${expert.name}`}
                   src={expert.img}
                   className="rounded-badge h-40 w-40 mx-auto object-cover mb-4 transition duration-300 hover:scale-110"
                 />
-                <p className="mt-2 text-lg font-semibold text-gray-800">{expert.name}</p>
+                <p className="mt-2 text-lg font-semibold text-gray-800">
+                  {expert.name}
+                </p>
                 <p className="text-sm text-gray-500">{expert.specialist}</p>
                 <p className="text-xs text-gray-400">{expert.degree}</p>
-                <p className="text-xs text-gray-600 mt-2">{expert.short_desc}</p>
+               <Link href={`/Appoinment/${expert.name}`}> <button className="bg-green-600 text-white px-3 py-1 rounded-lg my-3">Make Appoinment</button></Link>
               </div>
             ))}
           </div>

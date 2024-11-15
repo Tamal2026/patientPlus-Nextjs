@@ -23,6 +23,7 @@ export default function NavBar() {
     { name: "Services", href: "/Service" },
     { name: "Blog", href: "/Blog" },
     { name: "Contact us", href: "/Contact" },
+    { name: "My Appoinments", href: "/myAppoinments" },
   ];
 
   const NavLink = ({ name, href, delay }) => (
