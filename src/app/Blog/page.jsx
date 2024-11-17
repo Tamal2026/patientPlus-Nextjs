@@ -1,66 +1,92 @@
 // pages/index.js
+"use client"
 import Image from 'next/image';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function Page() {
-  // Dummy data for posts
-  const posts = [
-    {
-      id: 1,
-      image: '', // Replace with actual image URL or path
-      title: 'Good Health Habits Can Help Stop Germs',
-      date: 'Jun 15, 2024',
-      author: 'Dr. Jones',
-      comments: 3,
-      description:
-        'Integer tincidunt justo eu blandit dictum. Sed euismod, justo sit amet finibus iaculis, odio lectus finibus magna, non lobortis tellus massa quis arcu. Aenean ante diam, ultricies id turpis vel, tristique bibendum augue.',
-    },
-    {
-      id: 2,
-      image: '', // Replace with actual image URL or path
-      title: 'Important Tips for Your Health and Better Living',
-      date: 'Jun 15, 2024',
-      author: 'Dr. Jones',
-      comments: 0,
-      description:
-        'Integer tincidunt justo eu blandit dictum. Sed euismod, justo sit amet finibus iaculis, odio lectus finibus magna, non lobortis tellus massa quis arcu. Aenean ante diam, ultricies id turpis vel, tristique bibendum augue.',
-    },
-  ];
+  const [posts, setPosts] = useState([]); // State to hold the fetched posts
+  const [loading, setLoading] = useState(true); // State to track loading status
+  const [error, setError] = useState(null); // State to handle errors
+
+  // Fetch blog posts data from the API
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/Blog/api');
+        if (!response.ok) {
+          throw new Error('Failed to fetch posts');
+        }
+
+        const data = await response.json();
+        
+        // If data is empty or not an array, handle it gracefully
+        if (!Array.isArray(data)) {
+          throw new Error('Expected an array of posts');
+        }
+
+        setPosts(data); // Set the fetched posts data
+      } catch (err) {
+        setError(err.message); // Set error message if fetch fails
+      } finally {
+        setLoading(false); // Set loading to false after fetch completes
+      }
+    };
+
+    fetchPosts();
+  }, []); // Empty dependency array to run this effect once when the component mounts
+
+  if (loading) {
+    return <div>Loading...</div>; // Display loading message while fetching data
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>; // Display error message if fetch fails
+  }
 
   return (
     <div className="flex flex-col md:flex-row px-4 py-6 gap-8 my-20">
       {/* Left Section: Blog Cards */}
       <div className="w-full md:w-2/3 space-y-6">
-        {posts.map((post) => (
-          <div
-            key={post.id}
-            className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden mb-6"
-          >
-            {/* Image Section */}
-            <div className="w-full md:w-1/3">
-              <Image width={200} height={200} src={post.image} alt={post.title} className="w-full h-full object-cover" />
-            </div>
-            {/* Content Section */}
-            <div className="w-full md:w-2/3 p-6 flex flex-col justify-between">
-              <div>
-                <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
-                <div className="flex items-center text-gray-500 text-sm mb-4 space-x-4">
-                  <span className="flex items-center space-x-1">
-                    <span className="material-icons">chat_bubble_outline</span>
-                    <span>{post.comments}</span>
-                  </span>
-                  <span className="flex items-center space-x-1">
-                    <span className="material-icons">calendar_today</span>
-                    <span>{post.date}</span>
-                  </span>
-                  <span>By {post.author}</span>
-                </div>
-                <p className="text-gray-700 mb-4">{post.description}</p>
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <div
+              key={post._id} // MongoDB typically uses _id for primary key
+              className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden mb-6"
+            >
+              {/* Image Section */}
+              <div className="w-full md:w-1/3">
+                <Image
+                  width={200}
+                  height={200}
+                  src={post.image || '/default-image.jpg'}
+                  alt={post.title}
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <button className="text-blue-600 hover:underline self-start">Read More</button>
+              {/* Content Section */}
+              <div className="w-full md:w-2/3 p-6 flex flex-col justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
+                  <div className="flex items-center text-gray-500 text-sm mb-4 space-x-4">
+                    <span className="flex items-center space-x-1">
+                      <span className="material-icons">chat_bubble_outline</span>
+                      <span>{post.comments}</span>
+                    </span>
+                    <span className="flex items-center space-x-1">
+                      <span className="material-icons">calendar_today</span>
+                      <span>{post.date}</span>
+                    </span>
+                    <span>By {post.author}</span>
+                  </div>
+                  <p className="text-gray-700 mb-4">{post.description}</p>
+                </div>
+                <button className="text-blue-600 hover:underline self-start">Read More</button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <div>No posts available.</div> // If there are no posts
+        )}
       </div>
 
       {/* Right Section: Sidebar */}
