@@ -39,8 +39,8 @@ export const DELETE = async (request, { params }) => {
 // PATCH API FOR THE UPDATE THE APPOINMENT INFO
 
 export const PATCH = async (request, { params }) => {
-const body = await request.json()
-const{ date,time} = body
+const updateDoc = await request.json()
+
   try {
     const db = await connectDB();
     const appointmentCollection = db.collection("appointments");
@@ -49,8 +49,7 @@ const{ date,time} = body
       { _id: new ObjectId(params.id) },
       {
         $set: {
-          date,
-          time,
+          ...updateDoc
         },
       },
       {
@@ -69,7 +68,7 @@ const{ date,time} = body
     }
 
     return new Response(
-      JSON.stringify({ message: "Booking updated successfully" }),
+      JSON.stringify({ message: "Booking updated successfully" ,}),
       {
         status: 200,
         headers: { "Content-Type": "application/json" },
@@ -113,7 +112,7 @@ export const GET = async (request, { params }) => {
     );
   } catch (error) {
     console.error("Error deleting booking:", error);
-    return new Response(JSON.stringify({ error: "Failed to delete booking" }), {
+    return new Response(JSON.stringify({ error: "Failed to get booking" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });

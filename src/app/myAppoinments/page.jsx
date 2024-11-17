@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
@@ -71,24 +72,53 @@ export default function MyAppointments() {
           <thead>
             <tr className="bg-gray-100">
               <th className="border border-gray-300 px-4 py-2 text-left">#</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Doctor Name</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Date</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Time</th>
-              <th className="border border-gray-300 px-4 py-2 text-center">Action</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                Doctor Name
+              </th>
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                Date
+              </th>
+              <th className="border border-gray-300 px-4 py-2 text-left">
+                Time
+              </th>
+              <th className="border border-gray-300 px-4 py-2 text-center">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
             {Array.isArray(bookings) && bookings.length > 0 ? (
               bookings.map((booking, index) => (
                 <tr key={booking._id} className="hover:bg-gray-50">
-                  <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
-                  <td className="border border-gray-300 px-4 py-2">{booking.doctor}</td>
-                  <td className="border border-gray-300 px-4 py-2">{booking.date}</td>
-                  <td className="border border-gray-300 px-4 py-2">{booking.time}</td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {index + 1}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {booking.doctor}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {booking.date}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {booking.time}
+                  </td>
                   <td className="border border-gray-300 px-4 py-2 text-center flex items-center gap-10">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-                      Update
-                    </button>
+                    <Link
+                      href={{
+                        pathname: "/Appoinment/update",
+                        query: {
+                          id: booking._id,
+                          doctor: booking.doctor,
+                          date: booking.date,
+                          time: booking.time,
+                          symptoms:booking.symptoms
+                        },
+                      }}
+                    >
+                      <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                        Update
+                      </button>
+                    </Link>
                     <button
                       onClick={() => handleDelete(booking._id)}
                       className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
@@ -100,7 +130,10 @@ export default function MyAppointments() {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="border border-gray-300 px-4 py-2 text-center text-gray-500">
+                <td
+                  colSpan="5"
+                  className="border border-gray-300 px-4 py-2 text-center text-gray-500"
+                >
                   No bookings found.
                 </td>
               </tr>
