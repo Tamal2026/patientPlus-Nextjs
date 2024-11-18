@@ -1,9 +1,9 @@
-// pages/index.js
-"use client"
-import Image from 'next/image';
-import React, { useState, useEffect } from 'react';
+"use client";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useState, useEffect } from "react";
 
-export default function Page() {
+export default function Blog() {
   const [posts, setPosts] = useState([]); // State to hold the fetched posts
   const [loading, setLoading] = useState(true); // State to track loading status
   const [error, setError] = useState(null); // State to handle errors
@@ -12,35 +12,34 @@ export default function Page() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://localhost:3000/Blog/api');
+        const response = await fetch("http://localhost:3000/Blog/api");
         if (!response.ok) {
-          throw new Error('Failed to fetch posts');
+          throw new Error("Failed to fetch posts");
         }
 
         const data = await response.json();
-        
-        // If data is empty or not an array, handle it gracefully
+
         if (!Array.isArray(data)) {
-          throw new Error('Expected an array of posts');
+          throw new Error("Expected an array of posts");
         }
 
-        setPosts(data); // Set the fetched posts data
+        setPosts(data);
       } catch (err) {
-        setError(err.message); // Set error message if fetch fails
+        setError(err.message);
       } finally {
-        setLoading(false); // Set loading to false after fetch completes
+        setLoading(false);
       }
     };
 
     fetchPosts();
-  }, []); // Empty dependency array to run this effect once when the component mounts
+  }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Display loading message while fetching data
+    return <div className="mt-20">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>; // Display error message if fetch fails
+    return <div>Error: {error}</div>;
   }
 
   return (
@@ -50,7 +49,7 @@ export default function Page() {
         {posts.length > 0 ? (
           posts.map((post) => (
             <div
-              key={post._id} // MongoDB typically uses _id for primary key
+              key={post._id}
               className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden mb-6"
             >
               {/* Image Section */}
@@ -58,7 +57,7 @@ export default function Page() {
                 <Image
                   width={200}
                   height={200}
-                  src={post.image || '/default-image.jpg'}
+                  src={post.image || "/default-image.jpg"}
                   alt={post.title}
                   className="w-full h-full object-cover"
                 />
@@ -69,23 +68,22 @@ export default function Page() {
                   <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
                   <div className="flex items-center text-gray-500 text-sm mb-4 space-x-4">
                     <span className="flex items-center space-x-1">
-                      <span className="material-icons">chat_bubble_outline</span>
                       <span>{post.comments}</span>
                     </span>
                     <span className="flex items-center space-x-1">
-                      <span className="material-icons">calendar_today</span>
                       <span>{post.date}</span>
                     </span>
-                    <span>By {post.author}</span>
                   </div>
                   <p className="text-gray-700 mb-4">{post.description}</p>
                 </div>
-                <button className="text-blue-600 hover:underline self-start">Read More</button>
+                <button className="text-blue-600 hover:underline self-start">
+                  Read More
+                </button>
               </div>
             </div>
           ))
         ) : (
-          <div>No posts available.</div> // If there are no posts
+          <div>No posts available.</div>
         )}
       </div>
 
@@ -100,7 +98,9 @@ export default function Page() {
               placeholder="Search"
               className="w-full border border-gray-300 p-2 rounded-l"
             />
-            <button className="bg-blue-600 text-white px-4 rounded-r">Search</button>
+            <button className="bg-blue-600 text-white px-4 rounded-r">
+              Search
+            </button>
           </div>
         </div>
 
@@ -108,10 +108,36 @@ export default function Page() {
         <div className="bg-white shadow-lg rounded-lg p-4">
           <h3 className="text-lg font-semibold mb-4">Our Services</h3>
           <ul className="space-y-2 text-blue-600">
-            <li className="hover:underline cursor-pointer">Bills & Insurance</li>
-            <li className="hover:underline cursor-pointer">Cancer Screening</li>
-            <li className="hover:underline cursor-pointer">Cardiac Surgery</li>
-            <li className="hover:underline cursor-pointer">Neurology</li>
+            <Link href={"/ServiceDetailsPage/6735cc1e3fbb05ec0c097b56"}>
+              {" "}
+              <li className="hover:underline cursor-pointer">
+                Bills & Insurance
+              </li>
+            </Link>
+            <Link href={"/ServiceDetailsPage/6735cc1e3fbb05ec0c097b57"}>
+              {" "}
+              <li className="hover:underline cursor-pointer">
+                Cancer Screening
+              </li>
+            </Link>
+            <Link href={"ServiceDetailsPage/6735cc1e3fbb05ec0c097b55"}>
+              {" "}
+              <li className="hover:underline cursor-pointer">
+                Cardiac Surgery
+              </li>
+            </Link>
+            <Link href={"/ServiceDetailsPage/6735cc1e3fbb05ec0c097b54"}>
+              {" "}
+              <li className="hover:underline cursor-pointer">Neurology</li>
+            </Link>
+            <Link href={"/ServiceDetailsPage/6735cc1e3fbb05ec0c097b58"}>
+              {" "}
+              <li className="hover:underline cursor-pointer">Orthopedics</li>
+            </Link>
+            <Link href={"/ServiceDetailsPage/6735cc1e3fbb05ec0c097b59"}>
+              {" "}
+              <li className="hover:underline cursor-pointer">Pediatrics</li>
+            </Link>
           </ul>
         </div>
 
@@ -130,6 +156,32 @@ export default function Page() {
             <li className="hover:underline cursor-pointer">Health</li>
             <li className="hover:underline cursor-pointer">Medical care</li>
           </ul>
+        </div>
+
+        {/* Recent Posts */}
+        <div className="bg-white shadow-lg rounded-lg p-4">
+          <h3 className="text-lg font-semibold mb-4">Recent Posts</h3>
+          <div className="space-y-4">
+            {posts.map((post) => (
+              <div key={post._id} className="flex items-center space-x-4">
+                <div className="w-1/4">
+                  <Image
+                    width={50}
+                    height={50}
+                    src={post.image || "/default-image.jpg"}
+                    alt={post.title}
+                    className="w-full h-full object-cover rounded"
+                  />
+                </div>
+                <div className="w-3/4">
+                  <h4 className="text-sm font-semibold text-blue-600">
+                    {post.title}
+                  </h4>
+                  <p className="text-xs text-gray-500">{post.date}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
