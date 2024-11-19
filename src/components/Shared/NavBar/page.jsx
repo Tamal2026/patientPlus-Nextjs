@@ -40,9 +40,9 @@ export default function NavBar() {
   );
 
   const AppointmentButton = () => (
-    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-      MAKE AN APPOINTMENT
-    </button>
+   <Link href={"/MakeAppoinment"}> <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+   MAKE AN APPOINTMENT
+ </button></Link>
   );
 
   return (
