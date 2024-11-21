@@ -10,10 +10,12 @@ export default function NavBar() {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session } = useSession();
+
   useEffect(() => {
     if (session) {
       router.push("/");
     }
+    
   }, [session, router]);
 
   const navLinks = [
@@ -23,7 +25,10 @@ export default function NavBar() {
     { name: "Services", href: "/Service" },
     { name: "Blog", href: "/Blog" },
     { name: "Contact us", href: "/Contact" },
-    { name: "My Appoinments", href: "/myAppoinments" },
+    // Conditionally add My Appointments if not admin
+    ...(session?.user?.role !== "admin" 
+      ? [{ name: "My Appointments", href: "/myAppointments" }] 
+      : []),
   ];
 
   const NavLink = ({ name, href, delay }) => (
@@ -40,9 +45,11 @@ export default function NavBar() {
   );
 
   const AppointmentButton = () => (
-   <Link href={"/MakeAppoinment"}> <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-   MAKE AN APPOINTMENT
- </button></Link>
+    <Link href={"/MakeAppointment"}>
+      <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+        MAKE AN APPOINTMENT
+      </button>
+    </Link>
   );
 
   return (

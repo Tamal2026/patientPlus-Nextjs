@@ -1,7 +1,10 @@
-// src/components/AppointmentForm.js
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // For navigation
+import Swal from "sweetalert2";
+import { useSession } from "next-auth/react";
 
+// Sample data for categories and doctors
 const data = [
   {
     title: "Neurology",
@@ -40,10 +43,7 @@ const data = [
       { name: "Dr. Robert James", specialist: "Orthopedic Surgeon" },
       { name: "Dr. Lisa White", specialist: "Sports Medicine Specialist" },
       { name: "Dr. Charles Green", specialist: "Pediatric Orthopedic Surgeon" },
-      {
-        name: "Dr. Emily Brown",
-        specialist: "Orthopedic Rehabilitation Specialist",
-      },
+      { name: "Dr. Emily Brown", specialist: "Orthopedic Rehabilitation Specialist" },
     ],
   },
   {
@@ -69,6 +69,8 @@ export default function AppointmentForm() {
     selectedCategory: "",
     selectedDoctor: "",
   });
+const session = useSession()
+  const router = useRouter(); // Next.js router for navigation
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -93,40 +95,84 @@ export default function AppointmentForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newAppoinment = {
-      email: formData.email,
-      name: formData.name,
-      category: formData.selectedCategory,
-      doctor: formData.selectedDoctor,
-      date: formData.date,
-      time: formData.time,
-      symptoms: formData.symptoms,
-    };
-    const resp = await fetch(
-      "http://localhost:3000/Appoinment/api/newAppoinment",
-      {
-        method: "POST",
-        body: JSON.stringify(newAppoinment),
-        headers: {
-          "Content-Type": "application/json",
-        },
+
+    // Show confirmation dialog
+    const confirm = await Swal.fire({
+      title: "Confirm Appointment?",
+      text: "Do you want to book this appointment?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, book it!",
+      cancelButtonText: "Cancel",
+    });
+
+    if (confirm.isConfirmed) {
+      const newAppointment = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        date: formData.date,
+        time: formData.time,
+        reason: formData.reason,
+        category: formData.selectedCategory,
+        doctor: formData.selectedDoctor,
+      };
+
+      try {
+        const response = await fetch(
+          "http://localhost:3000/Appoinment/api/newAppoinment",
+          {
+            method: "POST",
+            body: JSON.stringify(newAppointment),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to book appointment");
+        }
+
+        Swal.fire({
+          title: "Success!",
+          text: "Your appointment has been booked.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          date: "",
+          time: "",
+          reason: "",
+          selectedCategory: "",
+          selectedDoctor: "",
+        });
+
+        // Navigate to home page
+        router.push("/");
+      } catch (error) {
+        Swal.fire({
+          title: "Error",
+          text: "There was an error booking your appointment.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
       }
-    );
-    console.log(resp);
+    }
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-bold mb-4 text-center">
-        Book an Appointment
-      </h2>
+    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md sm:max-w-lg lg:max-w-xl">
+      <h2 className="text-2xl font-bold mb-4 text-center">Book an Appointment</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="name"
-          >
-            Name
+          <label className="block text-gray-700 font-medium mb-2" htmlFor="name">
+            Patient name
           </label>
           <input
             type="text"
@@ -140,17 +186,14 @@ export default function AppointmentForm() {
         </div>
 
         <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="email"
-          >
+          <label className="block text-gray-700 font-medium mb-2" htmlFor="email">
             Email
           </label>
           <input
             type="email"
             id="email"
             name="email"
-            value={formData.email}
+            defaultValue={session?.data?.email}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-md p-2"
             required
@@ -158,10 +201,7 @@ export default function AppointmentForm() {
         </div>
 
         <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="phone"
-          >
+          <label className="block text-gray-700 font-medium mb-2" htmlFor="phone">
             Phone
           </label>
           <input
@@ -176,10 +216,7 @@ export default function AppointmentForm() {
         </div>
 
         <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="category"
-          >
+          <label className="block text-gray-700 font-medium mb-2" htmlFor="category">
             Select Category
           </label>
           <select
@@ -227,10 +264,7 @@ export default function AppointmentForm() {
           )}
 
         <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="date"
-          >
+          <label className="block text-gray-700 font-medium mb-2" htmlFor="date">
             Appointment Date
           </label>
           <input
@@ -245,10 +279,7 @@ export default function AppointmentForm() {
         </div>
 
         <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="time"
-          >
+          <label className="block text-gray-700 font-medium mb-2" htmlFor="time">
             Appointment Time
           </label>
           <input
@@ -263,11 +294,8 @@ export default function AppointmentForm() {
         </div>
 
         <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="reason"
-          >
-            Reason for Appointment
+          <label className="block text-gray-700 font-medium mb-2" htmlFor="reason">
+            Reason for Visit
           </label>
           <textarea
             id="reason"
@@ -275,9 +303,8 @@ export default function AppointmentForm() {
             value={formData.reason}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-md p-2"
-            rows="4"
             required
-          ></textarea>
+          />
         </div>
 
         <button

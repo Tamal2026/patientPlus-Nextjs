@@ -1,14 +1,14 @@
-import NextAuth from "next-auth/next";
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectDB } from "@/app/lib/connectDB";
 import bcrypt from "bcrypt";
 import GoogleProvider from "next-auth/providers/google";
 
 const handler = NextAuth({
-  secret:process.env.NEXT_PUBLIC_AUTH_SECRET,
+  secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   providers: [
     CredentialsProvider({
@@ -38,6 +38,7 @@ const handler = NextAuth({
           id: user._id,
           email: user.email,
           name: user.name,
+          role: user.role, 
         };
       },
     }),
@@ -52,6 +53,7 @@ const handler = NextAuth({
         token.id = user.id || user._id;
         token.email = user.email;
         token.name = user.name;
+        token.role = user.role || "userr";
       }
       return token;
     },
@@ -61,6 +63,7 @@ const handler = NextAuth({
         id: token.id,
         email: token.email,
         name: token.name,
+        role: token.role, // Add role to session
       };
       return session;
     },
@@ -82,6 +85,7 @@ const handler = NextAuth({
               email,
               provider: "google",
               createdAt: new Date(),
+              role: "user", // Default role to "user"
             });
 
             console.log("New user created:", res.insertedId);
