@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { FaHome } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 export default function MyAppointments() {
@@ -66,7 +67,18 @@ export default function MyAppointments() {
 
   return (
     <div className="mt-20 px-4">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">My Bookings</h2>
+      <div className="flex gap-10 items-center">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+          My Appoinments
+        </h2>
+        <Link href={"/Dashboard"}>
+          {" "}
+          <button className="flex items-center gap-1 bg-orange-600 text-white font-semibold px-3 py-1 rounded-lg">
+            <FaHome></FaHome>
+            <h1>Dashboard</h1>
+          </button>
+        </Link>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-200">
           <thead>
@@ -111,7 +123,7 @@ export default function MyAppointments() {
                           doctor: booking.doctor,
                           date: booking.date,
                           time: booking.time,
-                          symptoms:booking.symptoms
+                          symptoms: booking.symptoms,
                         },
                       }}
                     >

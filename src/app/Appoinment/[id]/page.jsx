@@ -1,5 +1,6 @@
 "use client";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function AppointmentForm() {
@@ -136,12 +137,12 @@ export default function AppointmentForm() {
 
         {/* Submit Button */}
         <div>
-          <button
+         <Link href={"/Payments"}> <button
             type="submit"
             className="w-full bg-blue-500 text-white py-3 rounded-lg shadow-md hover:bg-blue-600"
           >
             Book Appointment
-          </button>
+          </button></Link>
         </div>
       </form>
     </div>

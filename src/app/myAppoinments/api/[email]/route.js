@@ -5,7 +5,7 @@ export const GET = async (request, { params }) => {
     const db = await connectDB();
     const appointmentsCollection = db.collection("appointments");
 
-    const { email } = params; // Ensure email is deconstructed from params
+    const { email } = params; 
 
     if (!email) {
       return new Response(
@@ -43,6 +43,6 @@ export const GET = async (request, { params }) => {
         status: 500,
         headers: { "Content-Type": "application/json" },
       }
-    );
+    )
   }
 };

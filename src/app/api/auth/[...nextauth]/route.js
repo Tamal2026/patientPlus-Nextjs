@@ -53,7 +53,7 @@ const handler = NextAuth({
         token.id = user.id || user._id;
         token.email = user.email;
         token.name = user.name;
-        token.role = user.role || "userr";
+        token.role = user.role;
       }
       return token;
     },
@@ -63,7 +63,7 @@ const handler = NextAuth({
         id: token.id,
         email: token.email,
         name: token.name,
-        role: token.role, // Add role to session
+        role: token.role, 
       };
       return session;
     },
@@ -79,13 +79,13 @@ const handler = NextAuth({
           const userExist = await userCollection.findOne({ email });
 
           if (!userExist) {
-            // Insert user if not exists
+           
             const res = await userCollection.insertOne({
               name,
               email,
               provider: "google",
               createdAt: new Date(),
-              role: "user", // Default role to "user"
+             
             });
 
             console.log("New user created:", res.insertedId);

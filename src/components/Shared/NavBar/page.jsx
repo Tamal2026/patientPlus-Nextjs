@@ -13,9 +13,12 @@ export default function NavBar() {
 
   useEffect(() => {
     if (session) {
-      router.push("/");
+      if (session.user.role === "admin") {
+        router.push("/Dashboard/admin");
+      } else {
+        router.push("/Dashboard/user");
+      }
     }
-    
   }, [session, router]);
 
   const navLinks = [
@@ -25,10 +28,10 @@ export default function NavBar() {
     { name: "Services", href: "/Service" },
     { name: "Blog", href: "/Blog" },
     { name: "Contact us", href: "/Contact" },
-    // Conditionally add My Appointments if not admin
-    ...(session?.user?.role !== "admin" 
-      ? [{ name: "My Appointments", href: "/myAppointments" }] 
-      : []),
+    // Conditionally add dashboard based on user role
+    ...(session?.user?.role === "admin"
+      ? [{ name: "Dashboard", href: "/Dashboard/admin" }]
+      : [{ name: "Dashboard", href: "/Dashboard/user" }]),
   ];
 
   const NavLink = ({ name, href, delay }) => (
@@ -74,7 +77,6 @@ export default function NavBar() {
             ))}
             <AppointmentButton />
 
-            {/* Show Login/Logout Button Based on Session */}
             {session ? (
               <button
                 onClick={() => signOut()}
@@ -94,7 +96,6 @@ export default function NavBar() {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -122,7 +123,6 @@ export default function NavBar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden space-y-4 mt-4">
             {navLinks.map((link, index) => (
@@ -137,7 +137,6 @@ export default function NavBar() {
               <AppointmentButton />
             </div>
 
-            {/* Show Login/Logout for Mobile */}
             {session ? (
               <button
                 onClick={() => signOut()}
