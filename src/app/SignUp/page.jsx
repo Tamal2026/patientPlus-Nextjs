@@ -80,7 +80,9 @@ export default function SignupPage() {
 
           <form className="space-y-4" onSubmit={handleSignUp}>
             <div>
-              <label className="block text-sm font-medium mb-1">Full Name</label>
+              <label className="block text-sm font-medium mb-1">
+                Full Name
+              </label>
               <input
                 name="name"
                 type="text"
@@ -129,11 +131,11 @@ export default function SignupPage() {
         </div>
       </div>
 
-      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-purple-500 to-blue-600 items-center justify-center">
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-slate-500 to-emerald-800 items-center justify-center">
         <img
-          src="https://via.placeholder.com/500x500"
+          src="https://i.ibb.co.com/gvc4YKm/sigup.webp"
           alt="Signup Illustration"
-          className="animate-fade-in w-3/4 h-auto rounded-lg shadow-lg"
+          className="animate-fade-in w-3/4 h-auto rounded-lg shadow-lg mt-20"
         />
       </div>
     </div>

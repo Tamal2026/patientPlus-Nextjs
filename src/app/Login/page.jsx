@@ -26,11 +26,11 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-blue-500 to-purple-600 items-center justify-center">
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-slate-500 to-emerald-800 items-center justify-center">
         <img
-          src="https://via.placeholder.com/500x500"
+          src="https://i.ibb.co.com/f1Tzqtv/login-nextjs.jpg"
           alt="Login Illustration"
-          className="animate-fade-in w-3/4 h-auto rounded-lg shadow-lg"
+          className="animate-fade-in w-3/4 h-auto rounded-lg mt-20 shadow-lg"
         />
       </div>
 
