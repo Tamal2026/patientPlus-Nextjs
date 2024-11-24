@@ -11,7 +11,7 @@ export default function Alluser() {
     try {
       const response = await fetch("http://localhost:3000/AllUser/api");
       const data = await response.json();
-      console.log(data)
+      console.log(data);
 
       if (response.ok) {
         setUsers(data.users || []);
@@ -58,6 +58,57 @@ export default function Alluser() {
     });
   };
 
+  const handleMakeAdmin = async (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `This user will be granted admin privileges!`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#28a745",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, make admin!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Sending PATCH request with the necessary body and headers
+          const response = await fetch(
+            `http://localhost:3000/AllUser/api/${id}`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json", // Ensure the server recognizes the payload format
+              },
+              body: JSON.stringify({ role: "admin" }), // Include the necessary payload
+            }
+          );
+
+          const data = await response.json(); // Parse the response
+
+          if (response.ok) {
+            // Notify success
+            Swal.fire(
+              "Success!",
+              `The user has been granted admin privileges.`,
+              "success"
+            );
+            fetchUsers(); // Refresh the user list
+          } else {
+            // Handle server errors
+            Swal.fire("Error", data.error || "Failed to update role", "error");
+          }
+        } catch (error) {
+          // Handle network or other unexpected errors
+          console.error("Error updating role:", error);
+          Swal.fire(
+            "Error!",
+            "Something went wrong while processing your request.",
+            "error"
+          );
+        }
+      }
+    });
+  };
+
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
@@ -88,11 +139,18 @@ export default function Alluser() {
             <tr key={user.id}>
               <td className="border px-4 py-2">{user.name}</td>
               <td className="border px-4 py-2">{user.email}</td>
-              {
-                user.role === "admin" ? <td className="border px-4 py-2">{user.role}</td> :
-
-                <td className="border px-4 py-1 text-blue-500 text-2xl text-center"><FaUser></FaUser></td>
-              }
+              <td className="border px-4 py-2">
+                {user.role === "admin" ? (
+                  <button>{user.role}</button>
+                ) : (
+                  <button
+                    onClick={() => handleMakeAdmin(user.id)}
+                    className="text-blue-500 text-2xl"
+                  >
+                    <FaUser />
+                  </button>
+                )}
+              </td>
               <td className="border px-4 py-5">
                 <button
                   onClick={() => handleDelete(user.id)}
