@@ -10,16 +10,20 @@ export default function NavBar() {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session } = useSession();
-
   useEffect(() => {
+    if (session === undefined) return; // Avoid unnecessary navigation during loading
+  
+    const currentPath = router.pathname;
+  
     if (session) {
-      if (session.user.role === "admin") {
+      if (session.user.role === "admin" && currentPath !== "/Dashboard/admin") {
         router.push("/Dashboard/admin");
-      } else {
+      } else if (session.user.role !== "admin" && currentPath !== "/Dashboard/user") {
         router.push("/Dashboard/user");
       }
     }
   }, [session, router]);
+  
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -30,7 +34,7 @@ export default function NavBar() {
     { name: "Contact us", href: "/Contact" },
     // Conditionally add dashboard based on user role
     ...(session?.user?.role === "admin"
-      ? [{ name: "Dashboard", href: "/Dashboard/admin" }]
+      ? [{ name: "Dashboard", href: "/Dashboard/admin" } ]
       : [{ name: "Dashboard", href: "/Dashboard/user" }]),
   ];
 

@@ -9,7 +9,6 @@ export default function Home() {
   return (
     <div className="min-h-screen  max-w-screen-2xl mx-auto">
       <Hero></Hero>
-
       <Blog></Blog>
       <Achievement></Achievement>
       <Queries></Queries>
