@@ -11,7 +11,6 @@ export default function Alluser() {
     try {
       const response = await fetch("http://localhost:3000/AllUser/api");
       const data = await response.json();
-      console.log(data);
 
       if (response.ok) {
         setUsers(data.users || []);
@@ -70,34 +69,30 @@ export default function Alluser() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          // Sending PATCH request with the necessary body and headers
           const response = await fetch(
             `http://localhost:3000/AllUser/api/${id}`,
             {
               method: "PATCH",
               headers: {
-                "Content-Type": "application/json", // Ensure the server recognizes the payload format
+                "Content-Type": "application/json",
               },
-              body: JSON.stringify({ role: "admin" }), // Include the necessary payload
+              body: JSON.stringify({ role: "admin" }),
             }
           );
 
-          const data = await response.json(); // Parse the response
+          const data = await response.json();
 
           if (response.ok) {
-            // Notify success
             Swal.fire(
               "Success!",
               `The user has been granted admin privileges.`,
               "success"
             );
-            fetchUsers(); // Refresh the user list
+            fetchUsers();
           } else {
-            // Handle server errors
             Swal.fire("Error", data.error || "Failed to update role", "error");
           }
         } catch (error) {
-          // Handle network or other unexpected errors
           console.error("Error updating role:", error);
           Swal.fire(
             "Error!",

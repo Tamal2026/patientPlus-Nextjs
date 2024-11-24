@@ -46,46 +46,31 @@ export const DELETE = async (req) => {
 // API for updating user to admin
 export const PATCH = async (req, { params }) => {
   try {
-    // Log the incoming request URL and method
-    console.log("Request URL:", req.url);
-    console.log("Request Method:", req.method);
 
-    // Parse the JSON body
-    let updateDoc;
-    try {
-      updateDoc = await req.json();
-      console.log("Parsed Body:", updateDoc);
-    } catch (error) {
-      console.error("Error parsing body:", error);
-      return new Response(
-        JSON.stringify({ error: "Invalid or empty request body" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
+    const resolvedParams = await params;
 
-    // Validate params.id
-    const userId = params.id || req.url.split("/").pop(); // Ensure valid ID extraction
-    if (!ObjectId.isValid(userId)) {
+    // Validate the ID
+    if (
+      !resolvedParams ||
+      !resolvedParams.id ||
+      !ObjectId.isValid(resolvedParams.id)
+    ) {
       return new Response(JSON.stringify({ error: "Invalid user ID" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
 
+    // Proceed with your update logic
+    const id = resolvedParams.id;
+    const updateDoc = await req.json();
+
     const db = await connectDB();
     const usersCollection = db.collection("users");
 
-    // Update user role
     const result = await usersCollection.updateOne(
-      { _id: new ObjectId(userId) },
-      {
-        $set: {
-          ...updateDoc,
-        },
-      }
+      { _id: new ObjectId(id) },
+      { $set: updateDoc }
     );
 
     if (result.matchedCount === 0) {
@@ -96,7 +81,7 @@ export const PATCH = async (req, { params }) => {
     }
 
     return new Response(
-      JSON.stringify({ message: "User updated to admin successfully" }),
+      JSON.stringify({ message: "User updated successfully" }),
       {
         status: 200,
         headers: { "Content-Type": "application/json" },
@@ -110,4 +95,3 @@ export const PATCH = async (req, { params }) => {
     });
   }
 };
-
