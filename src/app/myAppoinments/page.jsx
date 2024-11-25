@@ -71,7 +71,7 @@ export default function MyAppointments() {
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
           My Appoinments
         </h2>
-        <Link href={"/Dashboard"}>
+        <Link href={"/Dashboard/user"}>
           {" "}
           <button className="flex items-center gap-1 bg-orange-600 text-white font-semibold px-3 py-1 rounded-lg">
             <FaHome></FaHome>

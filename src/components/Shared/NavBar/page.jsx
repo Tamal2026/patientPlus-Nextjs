@@ -12,18 +12,20 @@ export default function NavBar() {
   const { data: session } = useSession();
   useEffect(() => {
     if (session === undefined) return; // Avoid unnecessary navigation during loading
-  
+
     const currentPath = router.pathname;
-  
+
     if (session) {
       if (session.user.role === "admin" && currentPath !== "/Dashboard/admin") {
         router.push("/Dashboard/admin");
-      } else if (session.user.role !== "admin" && currentPath !== "/Dashboard/user") {
+      } else if (
+        session.user.role !== "admin" &&
+        currentPath !== "/Dashboard/user"
+      ) {
         router.push("/Dashboard/user");
       }
     }
   }, [session, router]);
-  
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -32,9 +34,8 @@ export default function NavBar() {
     { name: "Services", href: "/Service" },
     { name: "Blog", href: "/Blog" },
     { name: "Contact us", href: "/Contact" },
-    // Conditionally add dashboard based on user role
     ...(session?.user?.role === "admin"
-      ? [{ name: "Dashboard", href: "/Dashboard/admin" } ]
+      ? [{ name: "Dashboard", href: "/Dashboard/admin" }]
       : [{ name: "Dashboard", href: "/Dashboard/user" }]),
   ];
 
@@ -52,7 +53,7 @@ export default function NavBar() {
   );
 
   const AppointmentButton = () => (
-    <Link href={"/MakeAppointment"}>
+    <Link href={"/MakeAppoinment"}>
       <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
         MAKE AN APPOINTMENT
       </button>
