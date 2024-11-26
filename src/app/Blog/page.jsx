@@ -57,7 +57,7 @@ export default function Blog() {
                 <Image
                   width={200}
                   height={200}
-                  src={post.image || "/default-image.jpg"}
+                  src={post.imageUrl || "/default-image.jpg"}
                   alt={post.title}
                   className="w-full h-full object-cover"
                 />
@@ -168,7 +168,7 @@ export default function Blog() {
                   <Image
                     width={50}
                     height={50}
-                    src={post.image || "/default-image.jpg"}
+                    src={post.imageUrl || "/default-image.jpg"}
                     alt={post.title}
                     className="w-full h-full object-cover rounded"
                   />

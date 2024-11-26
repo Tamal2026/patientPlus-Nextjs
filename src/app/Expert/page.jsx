@@ -29,12 +29,10 @@ export default function Page() {
     fetchData();
   }, []);
 
-  if (loading) return <p className="mt-20">Loading data...</p>;
 
   return (
     <div className="mt-20 px-4">
-      <h1 className="text-2xl font-bold mb-6">Our Services</h1>
-      <h3 className="font-bold text-lg mb-3">Meet Our Experts:</h3>
+      <h1 className="text-3xl font-bold mb-6 text-center">Meet Our Experts</h1>
       {data.map((service, index) => (
         <div key={index} className="mb-10 border-b pb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-2xl mx-auto">
