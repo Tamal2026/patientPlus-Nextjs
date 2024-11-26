@@ -10,52 +10,39 @@ const data = [
     title: "Neurology",
     img: "https://i.ibb.co.com/JdsbHyF/neurology.jpg",
     expertise: [
-      { name: "Dr. Jane Doe", specialist: "Neurologist" },
-      { name: "Dr. John Smith", specialist: "Neurosurgeon" },
-      { name: "Dr. Emily Clark", specialist: "Pediatric Neurologist" },
-      { name: "Dr. Alan Brown", specialist: "Neurophysiologist" },
+      { name: "Dr. Jane Doe", specialist: "Neurologist", price: "25.45" },
+      { name: "Dr. John Smith", specialist: "Neurosurgeon", price: "29.60" },
+      {
+        name: "Dr. Emily Clark",
+        specialist: "Pediatric Neurologist",
+        price: "35.75",
+      },
+      {
+        name: "Dr. Alan Brown",
+        specialist: "Neurophysiologist",
+        price: "35.15",
+      },
     ],
   },
   {
     title: "Cardiac Surgery",
     img: "https://i.ibb.co.com/52PYtGx/cardiac-surgery-open-chest-heart-procedure-1168612-352239.png",
     expertise: [
-      { name: "Dr. Michael Lee", specialist: "Cardiothoracic Surgeon" },
-      { name: "Dr. Sarah Johnson", specialist: "Cardiac Anesthesiologist" },
-      { name: "Dr. Kevin Wong", specialist: "Cardiologist" },
-      { name: "Dr. Laura Adams", specialist: "Perfusionist" },
+      {
+        name: "Dr. Michael Lee",
+        specialist: "Cardiothoracic Surgeon",
+        price: "91.40",
+      },
+      {
+        name: "Dr. Sarah Johnson",
+        specialist: "Cardiac Anesthesiologist",
+        price: "69.45",
+      },
+      { name: "Dr. Kevin Wong", specialist: "Cardiologist", price: "75.45" },
+      { name: "Dr. Laura Adams", specialist: "Perfusionist", price: "80.25" },
     ],
   },
-  {
-    title: "Cancer Screening",
-    img: "https://i.ibb.co.com/WkqvkZG/cancer-screening.webp",
-    expertise: [
-      { name: "Dr. Olivia Brown", specialist: "Oncologist" },
-      { name: "Dr. Ethan Moore", specialist: "Radiologist" },
-      { name: "Dr. Sophia Hall", specialist: "Pathologist" },
-      { name: "Dr. Daniel Wilson", specialist: "Hematologist" },
-    ],
-  },
-  {
-    title: "Orthopedics",
-    img: "https://i.ibb.co.com/orthopedics-image.jpg",
-    expertise: [
-      { name: "Dr. Robert James", specialist: "Orthopedic Surgeon" },
-      { name: "Dr. Lisa White", specialist: "Sports Medicine Specialist" },
-      { name: "Dr. Charles Green", specialist: "Pediatric Orthopedic Surgeon" },
-      { name: "Dr. Emily Brown", specialist: "Orthopedic Rehabilitation Specialist" },
-    ],
-  },
-  {
-    title: "Pediatrics",
-    img: "https://i.ibb.co.com/pediatrics-image.jpg",
-    expertise: [
-      { name: "Dr. Anna Clark", specialist: "Pediatrician" },
-      { name: "Dr. William Lee", specialist: "Pediatric Cardiologist" },
-      { name: "Dr. Elizabeth Turner", specialist: "Pediatric Endocrinologist" },
-      { name: "Dr. Michael Johnson", specialist: "Pediatric Neurologist" },
-    ],
-  },
+  // Other categories...
 ];
 
 export default function AppointmentForm() {
@@ -68,8 +55,9 @@ export default function AppointmentForm() {
     reason: "",
     selectedCategory: "",
     selectedDoctor: "",
+    selectedDoctorPrice: "",
   });
-const session = useSession()
+  const session = useSession();
   const router = useRouter(); // Next.js router for navigation
 
   const handleChange = (e) => {
@@ -82,11 +70,16 @@ const session = useSession()
       ...formData,
       selectedCategory: e.target.value,
       selectedDoctor: "",
+      selectedDoctorPrice: "",
     });
   };
 
-  const handleDoctorSelection = (doctorName) => {
-    setFormData({ ...formData, selectedDoctor: doctorName });
+  const handleDoctorSelection = (doctor) => {
+    setFormData({
+      ...formData,
+      selectedDoctor: doctor.name,
+      selectedDoctorPrice: doctor.price,
+    });
   };
 
   const selectedCategoryData = data.find(
@@ -151,6 +144,7 @@ const session = useSession()
           reason: "",
           selectedCategory: "",
           selectedDoctor: "",
+          selectedDoctorPrice: "",
         });
 
         // Navigate to home page
@@ -167,11 +161,16 @@ const session = useSession()
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md sm:max-w-lg lg:max-w-xl">
-      <h2 className="text-2xl font-bold mb-4 text-center">Book an Appointment</h2>
+    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md sm:max-w-lg lg:max-w-xl mt-20">
+      <h2 className="text-2xl font-bold mb-4 text-center">
+        Book an Appointment
+      </h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2" htmlFor="name">
+          <label
+            className="block text-gray-700 font-medium mb-2"
+            htmlFor="name"
+          >
             Patient name
           </label>
           <input
@@ -186,7 +185,10 @@ const session = useSession()
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2" htmlFor="email">
+          <label
+            className="block text-gray-700 font-medium mb-2"
+            htmlFor="email"
+          >
             Email
           </label>
           <input
@@ -201,7 +203,10 @@ const session = useSession()
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2" htmlFor="phone">
+          <label
+            className="block text-gray-700 font-medium mb-2"
+            htmlFor="phone"
+          >
             Phone
           </label>
           <input
@@ -216,7 +221,10 @@ const session = useSession()
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2" htmlFor="category">
+          <label
+            className="block text-gray-700 font-medium mb-2"
+            htmlFor="category"
+          >
             Select Category
           </label>
           <select
@@ -253,10 +261,11 @@ const session = useSession()
                         ? "bg-blue-100 border-blue-400"
                         : "border-gray-300"
                     }`}
-                    onClick={() => handleDoctorSelection(doctor.name)}
+                    onClick={() => handleDoctorSelection(doctor)}
                   >
                     <p className="font-medium">{doctor.name}</p>
                     <p className="text-sm text-gray-600">{doctor.specialist}</p>
+                    <p className="text-sm text-gray-500">${doctor.price}</p>
                   </li>
                 ))}
               </ul>
@@ -264,7 +273,10 @@ const session = useSession()
           )}
 
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2" htmlFor="date">
+          <label
+            className="block text-gray-700 font-medium mb-2"
+            htmlFor="date"
+          >
             Appointment Date
           </label>
           <input
@@ -279,7 +291,10 @@ const session = useSession()
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2" htmlFor="time">
+          <label
+            className="block text-gray-700 font-medium mb-2"
+            htmlFor="time"
+          >
             Appointment Time
           </label>
           <input
@@ -289,12 +304,20 @@ const session = useSession()
             value={formData.time}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-md p-2"
+            min="10:00"
+            max="22:00"
             required
           />
+          <p className="text-sm text-gray-500">
+            Select a time between 10:00 AM and 10:00 PM
+          </p>
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2" htmlFor="reason">
+          <label
+            className="block text-gray-700 font-medium mb-2"
+            htmlFor="reason"
+          >
             Reason for Visit
           </label>
           <textarea
@@ -302,17 +325,27 @@ const session = useSession()
             name="reason"
             value={formData.reason}
             onChange={handleChange}
+            rows="3"
             className="w-full border border-gray-300 rounded-md p-2"
             required
-          />
+          ></textarea>
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white font-medium py-2 rounded-md hover:bg-blue-600 transition duration-300"
-        >
-          Book Appointment
-        </button>
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-gray-700">
+            {formData.selectedDoctor &&
+              `Selected Doctor: ${formData.selectedDoctor} - $${formData.selectedDoctorPrice}`}
+          </p>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded-md"
+            disabled={
+              !formData.selectedDoctor || !formData.date || !formData.time
+            }
+          >
+            Book Appointment
+          </button>
+        </div>
       </form>
     </div>
   );

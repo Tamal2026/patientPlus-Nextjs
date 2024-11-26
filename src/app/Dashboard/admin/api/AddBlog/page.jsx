@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import { FaHome } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 export default function Page() {
@@ -50,7 +52,7 @@ export default function Page() {
       formDataForImg.append("image", formData.img);
 
       const response = await fetch(
-        `https://api.imgbb.com/1/upload?key=${process.env.IMG_BB_API}`,
+        `https://api.imgbb.com/1/upload?key=948117b46e1316de1603c7c07a2e5ec6`,
         {
           method: "POST",
           body: formDataForImg,
@@ -62,7 +64,7 @@ export default function Page() {
       if (!imgBBData.success) {
         Swal.fire({
           icon: "warning",
-          title: "Image Upload failed",
+          title: "Image upload failed",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -92,22 +94,39 @@ export default function Page() {
       );
 
       if (backendResponse.ok) {
+        // Show success alert
         Swal.fire({
           icon: "success",
           title: "Blog successfully uploaded",
           showConfirmButton: false,
           timer: 1500,
         });
+
+        // Reset the form and preview
+        setFormData({
+          title: "",
+          highlight: "",
+          description: "",
+          date: new Date().toISOString().split("T")[0], // Reset date to today
+          img: null,
+        });
+        setPreview(null);
       } else {
         Swal.fire({
           icon: "warning",
-          title: "Blog doesn't Upload",
+          title: "Failed to upload blog",
           showConfirmButton: false,
           timer: 1500,
         });
       }
     } catch (error) {
       console.error("Error submitting the form:", error);
+      Swal.fire({
+        icon: "error",
+        title: "An error occurred",
+        text: error.message,
+        showConfirmButton: true,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -115,9 +134,16 @@ export default function Page() {
 
   return (
     <div className="max-w-lg mx-auto mt-20 p-5 border rounded-lg shadow-lg bg-white hover:shadow-2xl transition-shadow duration-300">
-      <h2 className="text-3xl font-bold mb-5 text-center text-gray-800 animate-fadeIn">
+     <div className="flex justify-between">
+     <h2 className="text-3xl font-bold mb-5 text-center text-gray-800 animate-fadeIn">
         Add New Blog
       </h2>
+     <div>
+    <Link href={"/Dashboard/admin"}>   <button className="text-md bg-gray-600 text-white font-bold btn text-center  animate-fadeIn"> <FaHome></FaHome>
+       Dashboard
+      </button></Link>
+     </div>
+     </div>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label

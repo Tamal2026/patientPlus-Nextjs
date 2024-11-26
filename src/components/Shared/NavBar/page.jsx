@@ -10,22 +10,6 @@ export default function NavBar() {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session } = useSession();
-  useEffect(() => {
-    if (session === undefined) return; // Avoid unnecessary navigation during loading
-
-    const currentPath = router.pathname;
-
-    if (session) {
-      if (session.user.role === "admin" && currentPath !== "/Dashboard/admin") {
-        router.push("/Dashboard/admin");
-      } else if (
-        session.user.role !== "admin" &&
-        currentPath !== "/Dashboard/user"
-      ) {
-        router.push("/Dashboard/user");
-      }
-    }
-  }, [session, router]);
 
   const navLinks = [
     { name: "Home", href: "/" },

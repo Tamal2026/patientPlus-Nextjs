@@ -18,6 +18,7 @@ export default function ServicesCard({ services }) {
           />
           <h3 className="text-xl font-semibold text-gray-800 mb-2">
             {service.title}
+            {service.price}
           </h3>
           <p className="text-gray-600">{service.description}</p>
           <Link href={`/services/${service._id}`}>
