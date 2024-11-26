@@ -42,8 +42,70 @@ const data = [
       { name: "Dr. Laura Adams", specialist: "Perfusionist", price: "80.25" },
     ],
   },
-  // Other categories...
+  {
+    title: "Cancer Screening",
+    img: "https://i.ibb.co.com/WkqvkZG/cancer-screening.webp",
+    expertise: [
+      { name: "Dr. Olivia Brown", specialist: "Oncologist", price: "120.80" },
+      { name: "Dr. Ethan Moore", specialist: "Radiologist", price: "122.45" },
+      { name: "Dr. Sophia Hall", specialist: "Pathologist", price: "135.65" },
+      {
+        name: "Dr. Daniel Wilson",
+        specialist: "Hematologist",
+        price: "127.40",
+      },
+    ],
+  },
+  {
+    title: "Orthopedics",
+    img: "https://i.ibb.co.com/orthopedics-image.jpg",
+    expertise: [
+      {
+        name: "Dr. Robert James",
+        specialist: "Orthopedic Surgeon",
+        price: "50.45",
+      },
+      {
+        name: "Dr. Lisa White",
+        specialist: "Sports Medicine Specialist",
+        price: "75.45",
+      },
+      {
+        name: "Dr. Charles Green",
+        specialist: "Pediatric Orthopedic Surgeon",
+        price: "40.45",
+      },
+      {
+        name: "Dr. Emily Brown",
+        specialist: "Orthopedic Rehabilitation Specialist",
+        price: "55.25",
+      },
+    ],
+  },
+  {
+    title: "Pediatrics",
+    img: "https://i.ibb.co.com/pediatrics-image.jpg",
+    expertise: [
+      { name: "Dr. Anna Clark", specialist: "Pediatrician", price: "45.50" },
+      {
+        name: "Dr. William Lee",
+        specialist: "Pediatric Cardiologist",
+        price: "75.15",
+      },
+      {
+        name: "Dr. Elizabeth Turner",
+        specialist: "Pediatric Endocrinologist",
+        price: "68.25",
+      },
+      {
+        name: "Dr. Michael Johnson",
+        specialist: "Pediatric Neurologist",
+        price: "60.00",
+      },
+    ],
+  },
 ];
+// Other categories...
 
 export default function AppointmentForm() {
   const [formData, setFormData] = useState({
@@ -318,34 +380,27 @@ export default function AppointmentForm() {
             className="block text-gray-700 font-medium mb-2"
             htmlFor="reason"
           >
-            Reason for Visit
+            Reason for Appointment
           </label>
           <textarea
             id="reason"
             name="reason"
             value={formData.reason}
             onChange={handleChange}
-            rows="3"
             className="w-full border border-gray-300 rounded-md p-2"
+            rows="4"
             required
           ></textarea>
         </div>
 
-        <div className="flex items-center justify-between mb-4">
-          <p className="text-gray-700">
-            {formData.selectedDoctor &&
-              `Selected Doctor: ${formData.selectedDoctor} - $${formData.selectedDoctorPrice}`}
-          </p>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded-md"
-            disabled={
-              !formData.selectedDoctor || !formData.date || !formData.time
-            }
-          >
-            Book Appointment
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600"
+        >
+          {formData.selectedDoctorPrice
+            ? `Book Appointment ($${formData.selectedDoctorPrice})`
+            : "Select a Doctor"}
+        </button>
       </form>
     </div>
   );

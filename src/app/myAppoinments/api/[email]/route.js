@@ -5,7 +5,7 @@ export const GET = async (request, { params }) => {
     const db = await connectDB();
     const appointmentsCollection = db.collection("appointments");
 
-    const { email } = params; 
+    const { email } = await params; 
 
     if (!email) {
       return new Response(
