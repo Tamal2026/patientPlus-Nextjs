@@ -399,7 +399,7 @@ export default function AppointmentForm() {
         >
           {formData.selectedDoctorPrice
             ? `Book Appointment ($${formData.selectedDoctorPrice})`
-            : "Select a Doctor"}
+            : "Book Appoinment"}
         </button>
       </form>
     </div>
