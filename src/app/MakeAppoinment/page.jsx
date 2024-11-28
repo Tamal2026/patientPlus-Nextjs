@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation"; // For navigation
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 // Sample data for categories and doctors
 const data = [
@@ -120,7 +121,7 @@ export default function AppointmentForm() {
     selectedDoctorPrice: "",
   });
   const session = useSession();
-  const router = useRouter(); // Next.js router for navigation
+  const router = useRouter(); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -184,6 +185,9 @@ export default function AppointmentForm() {
             },
           }
         );
+        if(response.ok){
+          router.push("/Payments")
+        }
 
         if (!response.ok) {
           throw new Error("Failed to book appointment");
@@ -393,14 +397,12 @@ export default function AppointmentForm() {
           ></textarea>
         </div>
 
-        <button
+       <Link href={"/Payments"}> <button
           type="submit"
           className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600"
         >
-          {formData.selectedDoctorPrice
-            ? `Book Appointment ($${formData.selectedDoctorPrice})`
-            : "Book Appoinment"}
-        </button>
+         Book Appoinment
+        </button></Link>
       </form>
     </div>
   );
