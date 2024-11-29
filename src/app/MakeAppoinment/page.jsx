@@ -121,7 +121,7 @@ export default function AppointmentForm() {
     selectedDoctorPrice: "",
   });
   const session = useSession();
-  const router = useRouter(); 
+  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -185,8 +185,8 @@ export default function AppointmentForm() {
             },
           }
         );
-        if(response.ok){
-          router.push("/Payments")
+        if (response.ok) {
+          router.push("/Payments");
         }
 
         if (!response.ok) {
@@ -397,12 +397,15 @@ export default function AppointmentForm() {
           ></textarea>
         </div>
 
-       <Link href={"/Payments"}> <button
-          type="submit"
+        <button
+          type="button"
+          onClick={() =>
+            router.push(`/Payments?price=${formData.selectedDoctorPrice}`)
+          }
           className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600"
         >
-         Book Appoinment
-        </button></Link>
+          Book Appointment
+        </button>
       </form>
     </div>
   );

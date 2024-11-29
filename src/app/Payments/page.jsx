@@ -7,17 +7,25 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import { useSearchParams } from "next/navigation";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
+
+
+
 function CheckoutForm({ items }) {
+
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
+
+  const searchParams = useSearchParams()
+  const price = searchParams.get("price")
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -27,7 +35,7 @@ function CheckoutForm({ items }) {
     }
 
     // Create a payment intent on the server
-    const response = await fetch("/api/checkout", {
+    const response = await fetch("http://localhost:3000/Payments/api", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ items }),
@@ -81,7 +89,7 @@ function CheckoutForm({ items }) {
         disabled={!stripe || loading}
         className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 px-4 rounded-md hover:shadow-lg transition transform hover:scale-105 duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {loading ? "Processing..." : "Pay Now"}
+        {loading ? "Processing..." : `Pay ${price}`}
       </button>
       {success && (
         <p className="text-green-600 font-medium text-center mt-4 animate-pulse">
