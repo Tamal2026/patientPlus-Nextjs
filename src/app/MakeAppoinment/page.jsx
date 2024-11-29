@@ -302,6 +302,7 @@ export default function AppointmentForm() {
             required
           >
             <option value="" disabled>
+              
               Select a category
             </option>
             {data.map((category) => (
@@ -320,7 +321,8 @@ export default function AppointmentForm() {
               </h3>
               <ul className="space-y-2">
                 {selectedCategoryData.expertise.map((doctor) => (
-                  <li
+                  <li 
+                  required
                     key={doctor.name}
                     className={`p-2 border rounded-md cursor-pointer ${
                       formData.selectedDoctor === doctor.name

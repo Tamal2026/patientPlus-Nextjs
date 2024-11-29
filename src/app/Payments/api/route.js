@@ -6,24 +6,27 @@ const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY);
 export const POST = async (req) => {
   try {
     const body = await req.json();
-    const { items, userId } = body;
+    const { userEmail, price } = body;
+
+    // Validate price
+    if (!price || price <= 0) {
+      throw new Error("Invalid price provided");
+    }
 
     // Create a PaymentIntent with Stripe
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: calculateOrderAmount(items),
+      amount: Math.round(price * 100), // Convert dollars to cents
       currency: "usd",
       payment_method_types: ["card"],
     });
 
-    // Save payment details in  database
+    // Save payment details in the database
     const db = await connectDB();
     await db.collection("payments").insertOne({
       paymentIntentId: paymentIntent.id,
-      amount: paymentIntent.amount,
+      amount: price, // Store price in dollars, as requested
       currency: paymentIntent.currency,
-      status: "pending",
-      userId,
-      items,
+      userEmail, 
       createdAt: new Date(),
     });
 
@@ -42,9 +45,3 @@ export const POST = async (req) => {
     });
   }
 };
-
-function calculateOrderAmount(items) {
-  return (
-    items.reduce((total, item) => total + item.price * item.quantity, 0) * 100
-  );
-}
