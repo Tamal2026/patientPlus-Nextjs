@@ -77,6 +77,7 @@ export default function AppointmentForm() {
           </label>
           <input
             type="email"
+            readOnly
             defaultValue={data?.user?.email}
             id="email"
             name="email"

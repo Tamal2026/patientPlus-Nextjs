@@ -5,6 +5,7 @@ export default function page() {
   return (
     <div className='mt-20'>
       <Link href={"/myAppoinments"}><button className='btn bg-lime-600 text-white text-lg '>See My Appoinments</button></Link>
+      <Link href={"/Dashboard/user/api/PaymentHistory"}><button className='btn bg-emerald-500 text-white text-lg '>Payments History</button></Link>
       
     </div>
   )

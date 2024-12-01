@@ -1,12 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation"; // For navigation
+import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 
-// Sample data for categories and doctors
-const data = [
+const categories = [
   {
     title: "Neurology",
     img: "https://i.ibb.co.com/JdsbHyF/neurology.jpg",
@@ -106,7 +104,45 @@ const data = [
     ],
   },
 ];
-// Other categories...
+
+const InputField = ({
+  label,
+  type,
+  name,
+  value,
+  onChange,
+  required = false,
+  extraProps = {},
+}) => (
+  <div className="mb-4">
+    <label className="block text-gray-700 font-medium mb-2" htmlFor={name}>
+      {label}
+    </label>
+    <input
+      type={type}
+      id={name}
+      name={name}
+      value={value}
+      onChange={onChange}
+      required={required}
+      {...extraProps}
+      className="w-full border border-gray-300 rounded-md p-2"
+    />
+  </div>
+);
+
+const DoctorCard = ({ doctor, selected, onSelect }) => (
+  <li
+    className={`p-2 border rounded-md cursor-pointer ${
+      selected ? "bg-blue-100 border-blue-400" : "border-gray-300"
+    }`}
+    onClick={() => onSelect(doctor)}
+  >
+    <p className="font-medium">{doctor.name}</p>
+    <p className="text-sm text-gray-600">{doctor.specialist}</p>
+    <p className="text-sm text-gray-500">${doctor.price}</p>
+  </li>
+);
 
 export default function AppointmentForm() {
   const [formData, setFormData] = useState({
@@ -120,39 +156,34 @@ export default function AppointmentForm() {
     selectedDoctor: "",
     selectedDoctorPrice: "",
   });
-  const session = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCategoryChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       selectedCategory: e.target.value,
       selectedDoctor: "",
       selectedDoctorPrice: "",
-    });
+    }));
   };
 
   const handleDoctorSelection = (doctor) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       selectedDoctor: doctor.name,
       selectedDoctorPrice: doctor.price,
-    });
+    }));
   };
-
-  const selectedCategoryData = data.find(
-    (item) => item.title === formData.selectedCategory
-  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Show confirmation dialog
     const confirm = await Swal.fire({
       title: "Confirm Appointment?",
       text: "Do you want to book this appointment?",
@@ -162,69 +193,56 @@ export default function AppointmentForm() {
       cancelButtonText: "Cancel",
     });
 
-    if (confirm.isConfirmed) {
-      const newAppointment = {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        date: formData.date,
-        time: formData.time,
-        reason: formData.reason,
-        category: formData.selectedCategory,
-        doctor: formData.selectedDoctor,
-      };
+    if (!confirm.isConfirmed) return;
 
-      try {
-        const response = await fetch(
-          "http://localhost:3000/Appoinment/api/newAppoinment",
-          {
-            method: "POST",
-            body: JSON.stringify(newAppointment),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (response.ok) {
-          router.push("/Payments");
-        }
+    const appointmentDetails = {
+      ...formData,
+      category: formData.selectedCategory,
+      doctor: formData.selectedDoctor,
+    };
 
-        if (!response.ok) {
-          throw new Error("Failed to book appointment");
-        }
+    try {
+      const response = await fetch("/api/newAppointment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(appointmentDetails),
+      });
 
-        Swal.fire({
-          title: "Success!",
-          text: "Your appointment has been booked.",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
+      if (!response.ok) throw new Error("Failed to book appointment");
 
-        // Reset form
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          date: "",
-          time: "",
-          reason: "",
-          selectedCategory: "",
-          selectedDoctor: "",
-          selectedDoctorPrice: "",
-        });
+      Swal.fire({
+        title: "Success!",
+        text: "Your appointment has been booked.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
 
-        // Navigate to home page
-        router.push("/");
-      } catch (error) {
-        Swal.fire({
-          title: "Error",
-          text: "There was an error booking your appointment.",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-      }
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        date: "",
+        time: "",
+        reason: "",
+        selectedCategory: "",
+        selectedDoctor: "",
+        selectedDoctorPrice: "",
+      });
+
+      router.push("/Payments?price=" + formData.selectedDoctorPrice);
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "There was an error booking your appointment.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
+
+  const selectedCategory = categories.find(
+    (category) => category.title === formData.selectedCategory
+  );
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md sm:max-w-lg lg:max-w-xl mt-20">
@@ -232,59 +250,33 @@ export default function AppointmentForm() {
         Book an Appointment
       </h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="name"
-          >
-            Patient name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2"
-            required
-          />
-        </div>
+        <InputField
+          label="Patient Name"
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="email"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            defaultValue={session?.data?.email}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2"
-            required
-          />
-        </div>
+        <InputField
+          label="Email"
+          type="email"
+          name="email"
+          readOnly
+          value={formData.email || session?.user?.email || ""}
+          onChange={handleChange}
+          required
+        />
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="phone"
-          >
-            Phone
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2"
-            required
-          />
-        </div>
+        <InputField
+          label="Phone"
+          type="tel"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          required
+        />
 
         <div className="mb-4">
           <label
@@ -302,10 +294,9 @@ export default function AppointmentForm() {
             required
           >
             <option value="" disabled>
-              
               Select a category
             </option>
-            {data.map((category) => (
+            {categories.map((category) => (
               <option key={category.title} value={category.title}>
                 {category.title}
               </option>
@@ -313,73 +304,42 @@ export default function AppointmentForm() {
           </select>
         </div>
 
-        {formData.selectedCategory &&
-          selectedCategoryData?.expertise.length > 0 && (
-            <div className="mb-4">
-              <h3 className="text-xl font-medium text-gray-700 mb-2">
-                Available Doctors:
-              </h3>
-              <ul className="space-y-2">
-                {selectedCategoryData.expertise.map((doctor) => (
-                  <li 
-                  required
-                    key={doctor.name}
-                    className={`p-2 border rounded-md cursor-pointer ${
-                      formData.selectedDoctor === doctor.name
-                        ? "bg-blue-100 border-blue-400"
-                        : "border-gray-300"
-                    }`}
-                    onClick={() => handleDoctorSelection(doctor)}
-                  >
-                    <p className="font-medium">{doctor.name}</p>
-                    <p className="text-sm text-gray-600">{doctor.specialist}</p>
-                    <p className="text-sm text-gray-500">${doctor.price}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+        {selectedCategory && (
+          <div className="mb-4">
+            <h3 className="text-xl font-medium text-gray-700 mb-2">
+              Available Doctors:
+            </h3>
+            <ul className="space-y-2">
+              {selectedCategory.expertise.map((doctor) => (
+                <DoctorCard
+                  key={doctor.name}
+                  doctor={doctor}
+                  selected={formData.selectedDoctor === doctor.name}
+                  onSelect={handleDoctorSelection}
+                />
+              ))}
+            </ul>
+          </div>
+        )}
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="date"
-          >
-            Appointment Date
-          </label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2"
-            required
-          />
-        </div>
+        <InputField
+          label="Appointment Date"
+          type="date"
+          name="date"
+          value={formData.date}
+          onChange={handleChange}
+          required
+        />
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="time"
-          >
-            Appointment Time
-          </label>
-          <input
-            type="time"
-            id="time"
-            name="time"
-            value={formData.time}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2"
-            min="10:00"
-            max="22:00"
-            required
-          />
-          <p className="text-sm text-gray-500">
-            Select a time between 10:00 AM and 10:00 PM
-          </p>
-        </div>
+        <InputField
+          label="Appointment Time"
+          type="time"
+          name="time"
+          value={formData.time}
+          onChange={handleChange}
+          required
+          extraProps={{ min: "10:00", max: "22:00" }}
+        />
 
         <div className="mb-4">
           <label
@@ -400,11 +360,9 @@ export default function AppointmentForm() {
         </div>
 
         <button
-          type="button"
-          onClick={() =>
-            router.push(`/Payments?price=${formData.selectedDoctorPrice}`)
-          }
-          className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600"
+          type="submit"
+          className="w-full
+            bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
         >
           Book Appointment
         </button>
