@@ -76,9 +76,7 @@ export default function Blog() {
                   </div>
                   <p className="text-gray-700 mb-4">{post.description}</p>
                 </div>
-                <button className="text-blue-600 hover:underline self-start">
-                  Read More
-                </button>
+               
               </div>
             </div>
           ))
@@ -88,7 +86,7 @@ export default function Blog() {
       </div>
 
       {/* Right Section: Sidebar */}
-      <div className="w-full md:w-1/3 space-y-6">
+      <div className="w-full md:w-1/3 space-y-6"> 
         {/* Search Box */}
         <div className="bg-white shadow-lg rounded-lg p-4">
           <h3 className="text-lg font-semibold mb-4">Search</h3>

@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { FaHome } from "react-icons/fa";
 
 export default function Page() {
   const [paymentHistory, setPaymentHistory] = useState([]);
@@ -43,7 +45,7 @@ export default function Page() {
   }
 
   if (loading) {
-    return <div className="mt-20">Loading...</div>;
+    return <progress className="progress w-56"></progress>;
   }
 
   if (error) {
@@ -52,13 +54,18 @@ export default function Page() {
 
   return (
     <div className="mt-20">
+      <div className="flex items-center gap-x-10 mb-5">
       <h1 className="text-2xl font-bold mb-4">Payment History</h1>
+      <Link href={"/Dashboard/user"}><button className="flex items-center btn bg-sky-600 text-white">
+      <FaHome></FaHome> Dashboard
+        </button></Link>
+      </div>
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-gray-200">
             <th className="border border-gray-300 px-4 py-2">Date</th>
             <th className="border border-gray-300 px-4 py-2">Amount</th>
-            <th className="border border-gray-300 px-4 py-2">Status</th>
+            
           </tr>
         </thead>
         <tbody>
@@ -74,9 +81,7 @@ export default function Page() {
               <td className="border border-gray-300 px-4 py-2">
                 ${payment.amount.toFixed(2)}
               </td>
-              <td className="border border-gray-300 px-4 py-2">
-                {payment.status || "N/A"}
-              </td>
+             
             </tr>
           ))}
         </tbody>
