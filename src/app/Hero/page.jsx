@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 const slides = [
@@ -81,9 +82,12 @@ export default function Page() {
         >
           {slides[currentSlide].message}
         </p>
-        <button className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg">
-          Learn More
-        </button>
+        <Link href={"/Service"}>
+          {" "}
+          <button className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg">
+            Learn More
+          </button>
+        </Link>
       </div>
     </div>
   );

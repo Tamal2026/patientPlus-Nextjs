@@ -144,10 +144,12 @@ const DoctorCard = ({ doctor, selected, onSelect }) => (
   </li>
 );
 
+
 export default function AppointmentForm() {
+  const { data: session } = useSession();
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
+    email: session?.user?.email,
     phone: "",
     date: "",
     time: "",
@@ -156,7 +158,7 @@ export default function AppointmentForm() {
     selectedDoctor: "",
     selectedDoctorPrice: "",
   });
-  const { data: session } = useSession();
+ 
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -186,58 +188,20 @@ export default function AppointmentForm() {
 
     const confirm = await Swal.fire({
       title: "Confirm Appointment?",
-      text: "Do you want to book this appointment?",
+      text: "Do you want to proceed to payment for this appointment?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Yes, book it!",
+      confirmButtonText: "Yes, proceed!",
       cancelButtonText: "Cancel",
     });
 
     if (!confirm.isConfirmed) return;
 
-    const appointmentDetails = {
-      ...formData,
-      category: formData.selectedCategory,
-      doctor: formData.selectedDoctor,
-    };
+    // Save the form data to local storage
+    localStorage.setItem("appointmentData", JSON.stringify(formData));
 
-    try {
-      const response = await fetch("/api/newAppointment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(appointmentDetails),
-      });
-
-      if (!response.ok) throw new Error("Failed to book appointment");
-
-      Swal.fire({
-        title: "Success!",
-        text: "Your appointment has been booked.",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
-
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        date: "",
-        time: "",
-        reason: "",
-        selectedCategory: "",
-        selectedDoctor: "",
-        selectedDoctorPrice: "",
-      });
-
-      router.push("/Payments?price=" + formData.selectedDoctorPrice);
-    } catch (error) {
-      Swal.fire({
-        title: "Error",
-        text: "There was an error booking your appointment.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-    }
+    // Redirect to the payments page
+    router.push("/Payments");
   };
 
   const selectedCategory = categories.find(
@@ -264,7 +228,7 @@ export default function AppointmentForm() {
           type="email"
           name="email"
           readOnly
-          value={formData.email || session?.user?.email || ""}
+          value={session?.user?.email || ""}
           onChange={handleChange}
           required
         />

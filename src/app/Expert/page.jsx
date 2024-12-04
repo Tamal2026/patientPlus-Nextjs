@@ -29,10 +29,10 @@ export default function Page() {
     fetchData();
   }, []);
 
-
   return (
     <div className="mt-20 px-4">
       <h1 className="text-3xl font-bold mb-6 text-center">Meet Our Experts</h1>
+      {loading && <h1>Please wait...</h1>}
       {data.map((service, index) => (
         <div key={index} className="mb-10 border-b pb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-2xl mx-auto">
@@ -51,10 +51,8 @@ export default function Page() {
                 <p className="text-sm text-gray-600">{expert.degree}</p>
                 <p className="text-sm mb-10">{expert.short_desc}</p>
 
-                {/* Button to appear on hover */}
-                <Link href={`/Appoinment/${expert.name}`}><button className="absolute mb-2  bottom-1 mt-20 left-4 hidden group-hover:block  text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-md px-4 py-2 transition-transform translate-y-4 group-hover:translate-y-0">
-                  Make Appointment
-                </button></Link>
+              
+               
               </div>
             ))}
           </div>

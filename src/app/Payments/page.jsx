@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
@@ -7,68 +7,80 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 
+// Load Stripe with the publishable key
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
-function CheckoutForm() {
+// CheckoutForm Component
+function CheckoutForm({ appointmentData }) {
   const session = useSession();
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-
-  const searchParams = useSearchParams();
-  const price = parseFloat(searchParams.get("price"));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loading) return; // Avoid re-submission if already loading
 
+    if (loading) return;
     setLoading(true);
 
+    // Ensure Stripe and Elements are loaded
     if (!stripe || !elements) {
       setLoading(false);
-      return;
+      return Swal.fire({
+        icon: "error",
+        title: "Stripe Error",
+        text: "Stripe is not properly loaded. Please try again later.",
+      });
     }
 
-    const userEmail = session.data?.user?.email;
-
-    if (!userEmail) {
-      console.error("User email is not available");
-      setLoading(false);
-      return;
-    }
+    const userEmail = session?.data?.user?.email;
 
     try {
+      // Step 1: Create a payment intent
       const response = await fetch("/Payments/api", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userEmail, price }),
+        body: JSON.stringify({
+          userEmail,
+          price: appointmentData.selectedDoctorPrice,
+          doctorName: appointmentData.doctorName,
+          phoneNumber: appointmentData.phoneNumber,
+          patientName: appointmentData.patientName,
+          reason: appointmentData.reason,
+          time: appointmentData.time,
+          date: appointmentData.date,
+        }),
       });
 
       if (!response.ok) {
-        console.error(
-          "Error response from server:",
-          response.status,
-          await response.text()
-        );
+        console.error("Error response from server:", response.status);
         setLoading(false);
-        return;
+        return Swal.fire({
+          icon: "error",
+          title: "Payment Intent Error",
+          text: "Unable to create a payment intent. Please try again.",
+        });
       }
 
       const { clientSecret, error } = await response.json();
+
       if (error) {
         console.error("Error in payment intent:", error);
         setLoading(false);
-        return;
+        return Swal.fire({
+          icon: "error",
+          title: "Payment Error",
+          text: error,
+        });
       }
 
+      // Step 2: Confirm the payment using Stripe
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
@@ -77,78 +89,100 @@ function CheckoutForm() {
 
       if (result.error) {
         console.error("Payment failed:", result.error.message);
-      } else if (result.paymentIntent.status === "succeeded") {
-        console.log("Payment succeeded:", result.paymentIntent);
-        setSuccess(true);
         setLoading(false);
-        Swal.fire({
-          icon: "success",
-          title: "Payment Successful",
-          text: "Thank you for your payment!",
-          timer: 2000,
-          showConfirmButton: false,
-        }).then(() => {
-          setShowModal(true);
+        return Swal.fire({
+          icon: "error",
+          title: "Payment Failed",
+          text: result.error.message,
         });
       }
+
+      if (result.paymentIntent.status === "succeeded") {
+        // Step 3: Send appointment data to the backend
+        const paymentIntentId = result.paymentIntent.id;
+        const paymentStatus = result.paymentIntent.status;
+
+        const appointmentPayload = {
+          ...appointmentData,
+          userEmail,
+          paymentIntentId,
+          paymentStatus,
+        };
+
+        const saveResponse = await fetch("/Appoinment/api/newAppoinment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(appointmentPayload),
+        });
+
+        if (saveResponse.ok) {
+          setSuccess(true);
+          Swal.fire({
+            icon: "success",
+            title: "Payment & Appointment Saved",
+            text: "Your payment and appointment have been successfully saved.",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        } else {
+          console.error("Failed to save appointment data");
+          Swal.fire({
+            icon: "error",
+            title: "Save Error",
+            text: "Payment succeeded, but we couldn't save the appointment. Contact support.",
+          });
+        }
+      }
+
+      setLoading(false);
     } catch (error) {
       console.error("Error during payment submission:", error);
       setLoading(false);
+      Swal.fire({
+        icon: "error",
+        title: "Unexpected Error",
+        text: "Something went wrong. Please try again later.",
+      });
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white shadow-lg rounded-lg p-6 space-y-6 animate-fadeIn transition-all"
+      className="bg-white shadow-lg rounded-lg p-6 space-y-6"
     >
       <h3 className="text-lg font-semibold text-gray-700">
         Enter Payment Details
       </h3>
-      <CardElement className="p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-150 ease-in-out" />
+      <CardElement className="p-3 border rounded-md" />
       <button
         type="submit"
         disabled={!stripe || loading}
-        className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 px-4 rounded-md hover:shadow-lg transition transform hover:scale-105 duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-blue-500 text-white py-2 px-4 rounded-md"
       >
-        {loading ? "Processing..." : `Pay $${price.toFixed(2)}`}
+        {loading
+          ? "Processing..."
+          : `Pay $${appointmentData?.selectedDoctorPrice}`}
       </button>
       {success && (
-        <p className="text-green-600 font-medium text-center mt-4 animate-pulse">
+        <p className="text-green-600 font-medium text-center mt-4">
           Payment Successful! 🎉
         </p>
-      )}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h3 className="text-lg font-semibold text-center">
-              Payment Complete
-            </h3>
-            <p className="text-gray-700 text-center mt-2 mb-4">
-              What would you like to do next?
-            </p>
-            <div className="flex justify-between">
-              <button
-                onClick={() => (window.location.href = "/AddReview")}
-                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition"
-              >
-                Add Review
-              </button>
-              <button
-                onClick={() => (window.location.href = "/")}
-                className="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition"
-              >
-                Back to Home
-              </button>
-            </div>
-          </div>
-        </div>
       )}
     </form>
   );
 }
 
+// Main Checkout Component
 export default function Checkout() {
+  const [appointmentData, setAppointmentData] = useState(null);
+
+  useEffect(() => {
+    // Retrieve appointment data from localStorage
+    const storedData = JSON.parse(localStorage.getItem("appointmentData"));
+    setAppointmentData(storedData);
+  }, []);
+
   return (
     <Elements stripe={stripePromise}>
       <div className="min-h-screen flex items-center justify-center bg-gray-100 py-10 px-4">
@@ -161,7 +195,8 @@ export default function Checkout() {
               Securely process your payment using Stripe.
             </p>
           </div>
-          <CheckoutForm />
+          {/* Pass appointmentData as a prop */}
+          <CheckoutForm appointmentData={appointmentData} />
         </div>
       </div>
     </Elements>
