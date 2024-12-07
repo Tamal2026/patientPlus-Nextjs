@@ -21,7 +21,7 @@ export default function Page() {
       try {
         setLoading(true); 
         const data = await getServices();
-        console.log("Fetched Data:", data.services);
+        
         setServicesData(data.services);
       } catch (error) {
         console.error("Failed to fetch services:", error);

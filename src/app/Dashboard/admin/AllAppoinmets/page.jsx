@@ -14,7 +14,7 @@ export default function Page() {
           throw new Error("Failed to fetch appointments");
         }
         const data = await response.json();
-        console.log(data)
+    
         setAppointments(data.appoinments || []);
       } catch (error) {
         console.error("Error fetching appointments:", error);

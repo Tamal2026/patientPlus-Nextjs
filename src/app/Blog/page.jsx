@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import Image from "next/image";
 import Link from "next/link";
@@ -54,7 +55,7 @@ export default function Blog() {
             >
               {/* Image Section */}
               <div className="w-full md:w-1/3">
-                <Image
+                <img
                   width={200}
                   height={200}
                   src={post.imageUrl || "/default-image.jpg"}
@@ -76,7 +77,6 @@ export default function Blog() {
                   </div>
                   <p className="text-gray-700 mb-4">{post.description}</p>
                 </div>
-               
               </div>
             </div>
           ))
@@ -86,7 +86,7 @@ export default function Blog() {
       </div>
 
       {/* Right Section: Sidebar */}
-      <div className="w-full md:w-1/3 space-y-6"> 
+      <div className="w-full md:w-1/3 space-y-6">
         {/* Search Box */}
         <div className="bg-white shadow-lg rounded-lg p-4">
           <h3 className="text-lg font-semibold mb-4">Search</h3>
@@ -163,12 +163,15 @@ export default function Blog() {
             {posts.map((post) => (
               <div key={post._id} className="flex items-center space-x-4">
                 <div className="w-1/4">
-                  <Image
-                    width={50}
-                    height={50}
-                    src={post.imageUrl || "/default-image.jpg"}
+                  <img
+                    width={200}
+                    height={200}
+                    src={post.imageUrl ? post.imageUrl : "/default-image.jpg"}
                     alt={post.title}
-                    className="w-full h-full object-cover rounded"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = "/default-image.jpg";
+                    }}
                   />
                 </div>
                 <div className="w-3/4">

@@ -17,6 +17,7 @@ export default function NavBar() {
     { name: "Our Experts", href: "/Expert" },
     { name: "Services", href: "/Service" },
     { name: "Blog", href: "/Blog" },
+    { name: "Ai Feature", href: "/AiFeature" },
     { name: "Contact us", href: "/Contact" },
     ...(session?.user?.role === "admin"
       ? [{ name: "Dashboard", href: "/Dashboard/admin" }]
@@ -49,7 +50,7 @@ export default function NavBar() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Image
+            <img
               src="https://i.ibb.co/n7q1DXz/download-removebg-preview.jpg"
               alt="Logo"
               height={60}

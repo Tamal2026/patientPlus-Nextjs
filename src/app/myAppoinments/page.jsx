@@ -106,7 +106,7 @@ export default function MyAppointments() {
                     {index + 1}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {booking.doctor}
+                    {booking.selectedDoctor}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
                     {booking.date}

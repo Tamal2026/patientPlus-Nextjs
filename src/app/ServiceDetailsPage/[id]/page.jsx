@@ -60,7 +60,7 @@ const ServiceDetailsPage = async ({ params }) => {
                 </p>
                 <p className="text-sm text-gray-500">{expert.specialist}</p>
                 <p className="text-xs text-gray-400">{expert.degree}</p>
-               <Link href={`/Appoinment/${expert.name}`}> <button className="bg-green-600 text-white px-3 py-1 rounded-lg my-3">Make Appoinment</button></Link>
+               
               </div>
             ))}
           </div>

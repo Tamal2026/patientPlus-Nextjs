@@ -55,35 +55,40 @@ export default function Page() {
   return (
     <div className="mt-20">
       <div className="flex items-center gap-x-10 mb-5">
-      <h1 className="text-2xl font-bold mb-4">Payment History</h1>
-      <Link href={"/Dashboard/user"}><button className="flex items-center btn bg-sky-600 text-white">
-      <FaHome></FaHome> Dashboard
-        </button></Link>
+        <h1 className="text-2xl font-bold mb-4">Payment History</h1>
+        <Link href={"/Dashboard/user"}>
+          <button className="flex items-center btn bg-sky-600 text-white">
+            <FaHome></FaHome> Dashboard
+          </button>
+        </Link>
       </div>
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-gray-200">
             <th className="border border-gray-300 px-4 py-2">Date</th>
             <th className="border border-gray-300 px-4 py-2">Amount</th>
-            
           </tr>
         </thead>
         <tbody>
-          {paymentHistory.map((payment, index) => (
-            <tr key={index} className="odd:bg-white even:bg-gray-100">
-              <td className="border border-gray-300 px-4 py-2">
-                {new Date(payment.createdAt).toLocaleDateString("en-US", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">
-                ${payment.amount.toFixed(2)}
-              </td>
-             
-            </tr>
-          ))}
+          <tbody>
+            {paymentHistory.map((payment, index) => (
+              <tr key={index} className="odd:bg-white even:bg-gray-100">
+                <td className="border border-gray-300 px-4 py-2">
+                  {new Date(payment.createdAt).toLocaleDateString("en-US", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {/* Ensure amount is valid before using toFixed */}
+                  {payment.amount !== undefined && payment.amount !== null
+                    ? `$${payment.amount.toFixed(2)}`
+                    : "N/A"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </tbody>
       </table>
     </div>

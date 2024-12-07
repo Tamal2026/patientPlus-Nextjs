@@ -29,7 +29,6 @@ function CheckoutForm({ appointmentData }) {
     if (loading) return;
     setLoading(true);
 
-    // Ensure Stripe and Elements are loaded
     if (!stripe || !elements) {
       setLoading(false);
       return Swal.fire({
@@ -42,19 +41,28 @@ function CheckoutForm({ appointmentData }) {
     const userEmail = session?.data?.user?.email;
 
     try {
-      // Step 1: Create a payment intent
-      const response = await fetch("/Payments/api", {
+      // Convert selectedDoctorPrice to a number
+      const selectedDoctorPrice = parseFloat(
+        appointmentData?.selectedDoctorPrice
+      );
+
+      if (isNaN(selectedDoctorPrice)) {
+        setLoading(false);
+        return Swal.fire({
+          icon: "error",
+          title: "Invalid Price",
+          text: "The doctor's price is not a valid number.",
+        });
+      }
+
+      // 1. Create a Payment Intent on the server
+      const response = await fetch("/Payments/api/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...appointmentData,
           userEmail,
-          price: appointmentData.selectedDoctorPrice,
-          doctorName: appointmentData.doctorName,
-          phoneNumber: appointmentData.phoneNumber,
-          patientName: appointmentData.patientName,
-          reason: appointmentData.reason,
-          time: appointmentData.time,
-          date: appointmentData.date,
+          selectedDoctorPrice,
         }),
       });
 
@@ -80,7 +88,7 @@ function CheckoutForm({ appointmentData }) {
         });
       }
 
-      // Step 2: Confirm the payment using Stripe
+      // 2. Confirm the payment using Stripe
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
@@ -98,21 +106,18 @@ function CheckoutForm({ appointmentData }) {
       }
 
       if (result.paymentIntent.status === "succeeded") {
-        // Step 3: Send appointment data to the backend
+        // 3. Save the appointment to the database
         const paymentIntentId = result.paymentIntent.id;
-        const paymentStatus = result.paymentIntent.status;
 
-        const appointmentPayload = {
-          ...appointmentData,
-          userEmail,
-          paymentIntentId,
-          paymentStatus,
-        };
-
-        const saveResponse = await fetch("/Appoinment/api/newAppoinment", {
+        const saveResponse = await fetch("/Payments/api", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(appointmentPayload),
+          body: JSON.stringify({
+            ...appointmentData,
+            userEmail,
+            paymentIntentId,
+            paymentStatus: result.paymentIntent.status,
+          }),
         });
 
         if (saveResponse.ok) {
@@ -157,13 +162,14 @@ function CheckoutForm({ appointmentData }) {
       <CardElement className="p-3 border rounded-md" />
       <button
         type="submit"
-        disabled={!stripe || loading}
+        disabled={loading}
         className="w-full bg-blue-500 text-white py-2 px-4 rounded-md"
       >
         {loading
           ? "Processing..."
           : `Pay $${appointmentData?.selectedDoctorPrice}`}
       </button>
+
       {success && (
         <p className="text-green-600 font-medium text-center mt-4">
           Payment Successful! 🎉
@@ -173,12 +179,10 @@ function CheckoutForm({ appointmentData }) {
   );
 }
 
-// Main Checkout Component
 export default function Checkout() {
   const [appointmentData, setAppointmentData] = useState(null);
 
   useEffect(() => {
-    // Retrieve appointment data from localStorage
     const storedData = JSON.parse(localStorage.getItem("appointmentData"));
     setAppointmentData(storedData);
   }, []);

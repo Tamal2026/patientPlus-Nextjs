@@ -1,79 +1,100 @@
-import Stripe from "stripe";
 import { connectDB } from "@/app/lib/connectDB";
+import stripePackage from "stripe";
 
-const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY);
 
-export const POST = async (req) => {
+const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
+
+export async function POST(req) {
   try {
     const body = await req.json();
+
     const {
-      userEmail,
-      price,
-      doctorName,
-      phoneNumber,
-      patientName,
+      selectedDoctorPrice,
+      selectedDoctor,
+      phone,
+      name,
       reason,
+      userEmail,
       time,
       date,
     } = body;
 
-    if (!price || price <= 0) {
-      return new Response(JSON.stringify({ error: "Invalid price provided" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+    // Validate the price
+    const price = parseFloat(selectedDoctorPrice);
+    if (isNaN(price) || price <= 0) {
+      return new Response(
+        JSON.stringify({ error: "Invalid selectedDoctorPrice provided" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
     }
 
-    // Create a PaymentIntent with Stripe
+    // 1. Create a PaymentIntent with Stripe
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(price * 100),
+      amount: Math.round(price * 100), // Convert to cents
       currency: "usd",
       payment_method_types: ["card"],
     });
 
-    // Connect to database
+    // 2. Connect to the database
     const db = await connectDB();
 
-    // Save payment details in the "payments" collection
-    await db.collection("payments").insertOne({
-      paymentIntentId: paymentIntent.id,
-      amount: price,
-      currency: paymentIntent.currency,
-      userEmail,
-      doctorName,
-      time,
-      date,
-    });
+    // 3. Check for duplicate paymentIntentId in the payments collection
+    const existingPayment = await db
+      .collection("payments")
+      .findOne({ paymentIntentId: paymentIntent.id });
 
-    // Save appointment details in the "appointments" collection
-    await db.collection("appointments").insertOne({
-      doctorName,
-      phoneNumber,
-      patientName,
-      reason,
-      amount: price,
-      userEmail,
-      paymentIntentId: paymentIntent.id,
-      status: "pending",
-      createdAt: new Date(),
-    });
+    if (!existingPayment) {
+      const paymentData = {
+        paymentIntentId: paymentIntent.id,
+        amount: price,
+        currency: "usd",
+        userEmail,
+        status: "pending",
+        createdAt: new Date(),
+      };
 
-    // Return client secret for Stripe confirmation
+      await db.collection("payments").insertOne(paymentData);
+    } else {
+      console.log("Duplicate payment detected. Skipping insertion.");
+    }
+
+    // 4. Check for duplicate appointment in the appointments collection
+    const existingAppointment = await db
+      .collection("appointments")
+      .findOne({ paymentIntentId: paymentIntent.id });
+
+    if (!existingAppointment) {
+      const appointment = {
+        selectedDoctor,
+        phone,
+        name,
+        reason,
+        amount: price,
+        userEmail,
+        paymentIntentId: paymentIntent.id,
+        status: "pending", 
+        time,
+        date,
+        createdAt: new Date(),
+      };
+
+      await db.collection("appointments").insertOne(appointment);
+    } else {
+      console.log("Duplicate appointment detected. Skipping insertion.");
+    }
+
     return new Response(
-      JSON.stringify({ clientSecret: paymentIntent.client_secret }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }
+      JSON.stringify({
+        clientSecret: paymentIntent.client_secret,
+        message: "Payment intent created and data saved to database",
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
-    console.error("Error creating payment intent:", error);
+    console.error("Error processing payment and saving data:", error);
     return new Response(
-      JSON.stringify({ error: "Failed to process the payment request" }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
+      JSON.stringify({ error: "Failed to process the request" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
-};
+}

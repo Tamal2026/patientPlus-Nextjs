@@ -4,6 +4,7 @@ import React from 'react';
 export default function Page() {
   return (
     <div className="container mx-auto py-10 px-4 my-20">
+      <h1 className='text-center mb-8 text-4xl font-semibold bg-emerald-700 py-2 lg:w-1/4 rounded-lg mx-auto text-white'>About us</h1>
       <div className="flex flex-col lg:flex-row items-center">
         {/* Left Side: Image */}
         <div className="w-full lg:w-1/2 mb-8 lg:mb-0">

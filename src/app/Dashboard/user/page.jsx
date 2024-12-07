@@ -5,7 +5,7 @@ import React from 'react';
 
 export default function Page() {
   const session = useSession();
-  console.log(session)
+
 
   return (
     <div className="mt-20 px-4 md:px-20 flex flex-col items-center space-y-6 sm:h-screen">

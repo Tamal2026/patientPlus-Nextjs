@@ -7,7 +7,7 @@ export default function SocialLogin() {
    
   const handleSignIn = async (provider) => {
     const res = await signIn(provider,{redirect:false});
-    console.log(res)
+
     
   };
   return (

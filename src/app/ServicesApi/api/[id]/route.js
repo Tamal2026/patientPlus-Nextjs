@@ -6,7 +6,7 @@ export const GET = async (request, { params }) => {
   const servicesCollection = db.collection("services");
   try {
     const service = await servicesCollection.findOne({
-      _id: new ObjectId(params.id),
+      _id: await new ObjectId(params.id),
     });
     return Response.json({ service });
   } catch (error) {

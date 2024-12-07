@@ -1,10 +1,52 @@
-import React from 'react'
+"use client";
+import { useState } from "react";
 
-export default function page() {
+export default function AiFeature() {
+  const [prompt, setPrompt] = useState("");
+  const [response, setResponse] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("http://localhost:3000/Ai/api/AiBackend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Error: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      setResponse(data);
+    } catch (err) {
+      console.error("Frontend Error:", err.message);
+      alert("Failed to fetch AI response. Please try again.");
+    }
+  };
+
   return (
-    <div className='mt-20'>
-    This is ai feature
-    
+    <div className="container mt-20">
+      <h1>AI Prompt Assistant</h1>
+      <form onSubmit={handleSubmit}>
+        <textarea
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          placeholder="Describe your problem..."
+        />
+        <button type="submit">Submit</button>
+      </form>
+
+      {response && (
+        <div>
+          <h2>AI Response</h2>
+          <p>{response.answer}</p>
+          <h3>Suggested Department</h3>
+          <p>{response.suggestion}</p>
+        </div>
+      )}
     </div>
-  )
+  );
 }

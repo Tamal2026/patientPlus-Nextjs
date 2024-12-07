@@ -18,7 +18,7 @@ export default function LoginPage() {
     });
 
     if (res.ok) {
-      console.log("Login successful");
+     
     } else {
       console.error("Login failed:", res.error);
     }

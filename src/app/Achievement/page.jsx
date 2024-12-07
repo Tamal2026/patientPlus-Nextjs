@@ -35,7 +35,7 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="bg-gray-800 text-white py-10">
+    <div className="bg-gray-800 text-white py-10 my-5">
       <div className="max-w-screen-xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8 px-4 text-center">
         <div className="flex flex-col items-center">
           <i className="text-5xl mb-4">👨‍⚕️</i>
