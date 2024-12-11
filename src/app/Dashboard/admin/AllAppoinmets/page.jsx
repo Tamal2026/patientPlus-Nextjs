@@ -42,7 +42,7 @@ export default function Page() {
           <thead>
             <tr className="bg-gray-100">
               <th className="border px-4 py-2 text-left">Patient Name</th>
-              <th className="border px-4 py-2 text-left">Category</th>
+              <th className="border px-4 py-2 text-left">Phone</th>
               <th className="border px-4 py-2 text-left">Doctor</th>
               <th className="border px-4 py-2 text-left">Date</th>
               <th className="border px-4 py-2 text-left">Time</th>
@@ -52,8 +52,8 @@ export default function Page() {
             {appointments.map((appointment) => (
               <tr key={appointment._id} className="hover:bg-gray-50">
                 <td className="border px-4 py-2">{appointment.name}</td>
-                <td className="border px-4 py-2">{appointment.category}</td>
-                <td className="border px-4 py-2">{appointment.doctor}</td>
+                <td className="border px-4 py-2">{appointment.phone}</td>
+                <td className="border px-4 py-2">{appointment.selectedDoctor}</td>
                 <td className="border px-4 py-2">{appointment.date}</td>
                 <td className="border px-4 py-2 capitalize">
                   {appointment.time}

@@ -1,8 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -17,7 +18,6 @@ export default function NavBar() {
     { name: "Our Experts", href: "/Expert" },
     { name: "Services", href: "/Service" },
     { name: "Blog", href: "/Blog" },
-    { name: "Ai Feature", href: "/AiFeature" },
     { name: "Contact us", href: "/Contact" },
     ...(session?.user?.role === "admin"
       ? [{ name: "Dashboard", href: "/Dashboard/admin" }]
@@ -38,11 +38,12 @@ export default function NavBar() {
   );
 
   const AppointmentButton = () => (
-    <Link href={"/MakeAppoinment"}>
-      <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-        MAKE AN APPOINTMENT
-      </button>
-    </Link>
+    <button
+      onClick={() => router.push("/MakeAppoinment")}
+      className="bg-green-600 text-white px-4 py-2 rounded-lg"
+    >
+      Book Appointment
+    </button>
   );
 
   return (
@@ -65,7 +66,8 @@ export default function NavBar() {
             {navLinks.map((link, index) => (
               <NavLink key={link.name} {...link} delay={index * 0.1} />
             ))}
-            <AppointmentButton />
+            {/* Show Appointment Button only if the user is not an admin */}
+            {session?.user?.role !== "admin" && <AppointmentButton />}
 
             {session ? (
               <button
@@ -86,6 +88,7 @@ export default function NavBar() {
             )}
           </div>
 
+          {/* Mobile Menu Toggle */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -113,19 +116,23 @@ export default function NavBar() {
           </div>
         </div>
 
+        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden space-y-4 mt-4">
             {navLinks.map((link, index) => (
               <NavLink key={link.name} {...link} delay={index * 0.1} />
             ))}
-            <div
-              style={{
-                animation: `fadeInUp 0.5s ease forwards`,
-                animationDelay: `${navLinks.length * 0.1}s`,
-              }}
-            >
-              <AppointmentButton />
-            </div>
+            {/* Show Appointment Button only if the user is not an admin */}
+            {session?.user?.role !== "admin" && (
+              <div
+                style={{
+                  animation: `fadeInUp 0.5s ease forwards`,
+                  animationDelay: `${navLinks.length * 0.1}s`,
+                }}
+              >
+                <AppointmentButton />
+              </div>
+            )}
 
             {session ? (
               <button
