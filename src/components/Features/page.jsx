@@ -42,6 +42,9 @@ export default function Page() {
 
   return (
     <div className="p-6 sm:p-12 lg:p-16">
+      <h1 className="text-center mb-8 text-4xl font-semibold bg-emerald-700 py-2 lg:w-1/4 rounded-lg mx-auto text-white">
+        Features
+      </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {services.map((service, index) => (
           <div key={index} className="flex flex-col items-start bg-white shadow-md p-6 rounded-lg hover:shadow-lg transition-shadow">

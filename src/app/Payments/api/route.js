@@ -1,7 +1,6 @@
 import { connectDB } from "@/app/lib/connectDB";
 import stripePackage from "stripe";
 
-
 const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(req) {
@@ -14,12 +13,13 @@ export async function POST(req) {
       phone,
       name,
       reason,
-      userEmail,
+      email,
       time,
       date,
     } = body;
 
     // Validate the price
+    
     const price = parseFloat(selectedDoctorPrice);
     if (isNaN(price) || price <= 0) {
       return new Response(
@@ -30,59 +30,51 @@ export async function POST(req) {
 
     // 1. Create a PaymentIntent with Stripe
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(price * 100), // Convert to cents
+      amount: Math.round(price * 100),
       currency: "usd",
       payment_method_types: ["card"],
     });
 
-    // 2. Connect to the database
+
     const db = await connectDB();
 
-    // 3. Check for duplicate paymentIntentId in the payments collection
-    const existingPayment = await db
-      .collection("payments")
-      .findOne({ paymentIntentId: paymentIntent.id });
-
-    if (!existingPayment) {
-      const paymentData = {
-        paymentIntentId: paymentIntent.id,
-        amount: price,
-        currency: "usd",
-        userEmail,
-        status: "pending",
-        createdAt: new Date(),
-      };
-
-      await db.collection("payments").insertOne(paymentData);
-    } else {
-      console.log("Duplicate payment detected. Skipping insertion.");
+    async function insertIfNotExists(collectionName, query, data) {
+      const existing = await db.collection(collectionName).findOne(query);
+      if (!existing) {
+        await db.collection(collectionName).insertOne(data);
+      } else {
+        console.log(`Duplicate entry detected in ${collectionName}. Skipping insertion.`);
+      }
     }
 
-    // 4. Check for duplicate appointment in the appointments collection
-    const existingAppointment = await db
-      .collection("appointments")
-      .findOne({ paymentIntentId: paymentIntent.id });
+    // 3. Save Payment Data
+    const paymentData = {
+      paymentIntentId: paymentIntent.id,
+      amount: price,
+      currency: "usd",
+      email,
+      status: "pending",
+      createdAt: new Date(),
+    };
+    await insertIfNotExists("payments", { paymentIntentId: paymentIntent.id }, paymentData);
 
-    if (!existingAppointment) {
-      const appointment = {
-        selectedDoctor,
-        phone,
-        name,
-        reason,
-        amount: price,
-        userEmail,
-        paymentIntentId: paymentIntent.id,
-        status: "pending", 
-        time,
-        date,
-        createdAt: new Date(),
-      };
+    // 4. Save Appointment Data
+    const appointmentData = {
+      selectedDoctor,
+      phone,
+      name,
+      reason,
+      amount: price,
+      email,
+      paymentIntentId: paymentIntent.id,
+      status: "pending",
+      time,
+      date,
+      createdAt: new Date(),
+    };
+    await insertIfNotExists("appointments", { paymentIntentId: paymentIntent.id }, appointmentData);
 
-      await db.collection("appointments").insertOne(appointment);
-    } else {
-      console.log("Duplicate appointment detected. Skipping insertion.");
-    }
-
+    // 5. Return Success Response
     return new Response(
       JSON.stringify({
         clientSecret: paymentIntent.client_secret,

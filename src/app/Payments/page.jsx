@@ -8,6 +8,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation"; // Correct import for app directory
 import Swal from "sweetalert2";
 
 // Load Stripe with the publishable key
@@ -15,11 +16,11 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
-// CheckoutForm Component
 function CheckoutForm({ appointmentData }) {
   const session = useSession();
   const stripe = useStripe();
   const elements = useElements();
+  const router = useRouter(); // Correct hook for app directory
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -38,48 +39,30 @@ function CheckoutForm({ appointmentData }) {
       });
     }
 
-    const userEmail = session?.data?.user?.email;
+    const email = session?.data?.user?.email;
 
     try {
-      // Convert selectedDoctorPrice to a number
-      const selectedDoctorPrice = parseFloat(
-        appointmentData?.selectedDoctorPrice
-      );
-
-      if (isNaN(selectedDoctorPrice)) {
-        setLoading(false);
-        return Swal.fire({
-          icon: "error",
-          title: "Invalid Price",
-          text: "The doctor's price is not a valid number.",
-        });
-      }
-
-      // 1. Create a Payment Intent on the server
-      const response = await fetch("/Payments/api/create-payment-intent", {
+      const response = await fetch("/Payments/api", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...appointmentData,
-          userEmail,
-          selectedDoctorPrice,
+          email,
         }),
       });
 
       if (!response.ok) {
-        console.error("Error response from server:", response.status);
         setLoading(false);
         return Swal.fire({
           icon: "error",
-          title: "Payment Intent Error",
-          text: "Unable to create a payment intent. Please try again.",
+          title: "Payment Error",
+          text: "Unable to process payment. Please try again.",
         });
       }
 
       const { clientSecret, error } = await response.json();
 
       if (error) {
-        console.error("Error in payment intent:", error);
         setLoading(false);
         return Swal.fire({
           icon: "error",
@@ -88,7 +71,6 @@ function CheckoutForm({ appointmentData }) {
         });
       }
 
-      // 2. Confirm the payment using Stripe
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
@@ -96,7 +78,6 @@ function CheckoutForm({ appointmentData }) {
       });
 
       if (result.error) {
-        console.error("Payment failed:", result.error.message);
         setLoading(false);
         return Swal.fire({
           icon: "error",
@@ -106,42 +87,21 @@ function CheckoutForm({ appointmentData }) {
       }
 
       if (result.paymentIntent.status === "succeeded") {
-        // 3. Save the appointment to the database
-        const paymentIntentId = result.paymentIntent.id;
-
-        const saveResponse = await fetch("/Payments/api", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...appointmentData,
-            userEmail,
-            paymentIntentId,
-            paymentStatus: result.paymentIntent.status,
-          }),
+        Swal.fire({
+          icon: "success",
+          title: "Payment Successful",
+          text: "Your payment has been processed successfully!",
+          timer: 2000,
+          showConfirmButton: false,
         });
+        setSuccess(true);
 
-        if (saveResponse.ok) {
-          setSuccess(true);
-          Swal.fire({
-            icon: "success",
-            title: "Payment & Appointment Saved",
-            text: "Your payment and appointment have been successfully saved.",
-            timer: 2000,
-            showConfirmButton: false,
-          });
-        } else {
-          console.error("Failed to save appointment data");
-          Swal.fire({
-            icon: "error",
-            title: "Save Error",
-            text: "Payment succeeded, but we couldn't save the appointment. Contact support.",
-          });
-        }
+        // Redirect to the homepage
+        router.push("/");
       }
 
       setLoading(false);
     } catch (error) {
-      console.error("Error during payment submission:", error);
       setLoading(false);
       Swal.fire({
         icon: "error",
@@ -172,7 +132,7 @@ function CheckoutForm({ appointmentData }) {
 
       {success && (
         <p className="text-green-600 font-medium text-center mt-4">
-          Payment Successful! 🎉
+          Payment Successful! 🎉 Redirecting to the homepage...
         </p>
       )}
     </form>
@@ -199,7 +159,6 @@ export default function Checkout() {
               Securely process your payment using Stripe.
             </p>
           </div>
-          {/* Pass appointmentData as a prop */}
           <CheckoutForm appointmentData={appointmentData} />
         </div>
       </div>

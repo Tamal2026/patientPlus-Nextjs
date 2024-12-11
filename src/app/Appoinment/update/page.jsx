@@ -12,14 +12,14 @@ export default function UpdateAppointmentForm() {
   const initialDate = searchParams.get("date");
   const initialTime = searchParams.get("time");
   const initialPhone = searchParams.get("phone");
-  const initialSymptoms = searchParams.get("symptoms");
+  const initialreason = searchParams.get("reason");
 
   const [formData, setFormData] = useState({
     name: "",
     date: "",
     time: "",
     phone: "",
-    symptoms: "",
+    reason: "",
   });
 
   useEffect(() => {
@@ -28,9 +28,9 @@ export default function UpdateAppointmentForm() {
       date: initialDate || "",
       time: initialTime || "",
       phone: initialPhone || "",
-      symptoms: initialSymptoms || "",
+      reason: initialreason || "",
     });
-  }, [initialDate, initialTime, initialPhone, initialSymptoms]);
+  }, [initialDate, initialTime, initialPhone, initialreason]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -182,22 +182,22 @@ export default function UpdateAppointmentForm() {
             </div>
           </div>
 
-          {/* Symptoms Field */}
+          {/* reason Field */}
           <div>
             <label
-              htmlFor="symptoms"
+              htmlFor="reason"
               className="block text-lg font-medium text-gray-700 mb-2"
             >
-              Symptoms for Appointment
+              Reason for Appointment
             </label>
             <textarea
-              name="symptoms"
-              id="symptoms"
-              value={formData.symptoms}
+              name="reason"
+              id="reason"
+              value={formData.reason}
               onChange={handleChange}
               rows="4"
               className="mt-1 block w-full border-2 border-gray-300 rounded-lg p-4 text-lg focus:ring-purple-500 focus:border-purple-500 sm:text-base"
-              placeholder="Briefly describe the symptoms for your appointment"
+              placeholder="Briefly describe the reason for your appointment"
               required
             ></textarea>
           </div>
