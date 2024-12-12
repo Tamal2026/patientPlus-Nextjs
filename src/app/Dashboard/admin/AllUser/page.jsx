@@ -9,7 +9,7 @@ export default function Alluser() {
 
   const fetchUsers = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:3000/AllUser/api");
+      const response = await fetch(` ${process.env.NEXT_PUBLIC_BASE_URL}/AllUser/api`);
       const data = await response.json();
 
       if (response.ok) {
@@ -38,7 +38,7 @@ export default function Alluser() {
       if (result.isConfirmed) {
         try {
           const response = await fetch(
-            `http://localhost:3000/AllUser/api/${id}`,
+            ` ${process.env.NEXT_PUBLIC_BASE_URL}/AllUser/api/${id}`,
             { method: "DELETE" }
           );
           const data = await response.json();
@@ -70,7 +70,7 @@ export default function Alluser() {
       if (result.isConfirmed) {
         try {
           const response = await fetch(
-            `http://localhost:3000/AllUser/api/${id}`,
+            ` ${process.env.NEXT_PUBLIC_BASE_URL}/AllUser/api/${id}`,
             {
               method: "PATCH",
               headers: {

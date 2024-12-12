@@ -1,4 +1,4 @@
-import React from "react";
+export const dynamic = "force-dynamic"
 import Hero from "@/app/Hero/page";
 import Blog from "./Blog/page";
 import Achievement from "./Achievement/page";

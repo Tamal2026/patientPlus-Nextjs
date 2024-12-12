@@ -3,8 +3,9 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2"; // Import SweetAlert2
+import { Suspense } from "react"; // Import Suspense
 
-export default function UpdateAppointmentForm() {
+function UpdateAppointmentFormContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -12,7 +13,7 @@ export default function UpdateAppointmentForm() {
   const initialDate = searchParams.get("date");
   const initialTime = searchParams.get("time");
   const initialPhone = searchParams.get("phone");
-  const initialreason = searchParams.get("reason");
+  const initialReason = searchParams.get("reason");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -23,14 +24,13 @@ export default function UpdateAppointmentForm() {
   });
 
   useEffect(() => {
-   
     setFormData({
       date: initialDate || "",
       time: initialTime || "",
       phone: initialPhone || "",
-      reason: initialreason || "",
+      reason: initialReason || "",
     });
-  }, [initialDate, initialTime, initialPhone, initialreason]);
+  }, [initialDate, initialTime, initialPhone, initialReason]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,7 +40,6 @@ export default function UpdateAppointmentForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   
     const userConfirmed = await Swal.fire({
       title: "Are you sure?",
       text: "Do you really want to update this appointment?",
@@ -52,12 +51,12 @@ export default function UpdateAppointmentForm() {
     });
 
     if (!userConfirmed.isConfirmed) {
-      return; 
+      return;
     }
 
     try {
       const response = await fetch(
-        `http://localhost:3000/myAppoinments/api/deleteAppoinment/${id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/myAppoinments/api/deleteAppoinment/${id}`,
         {
           method: "PATCH",
           headers: {
@@ -71,7 +70,6 @@ export default function UpdateAppointmentForm() {
         throw new Error("Failed to update appointment.");
       }
 
-     
       Swal.fire({
         title: "Success!",
         text: "Your appointment has been updated.",
@@ -83,7 +81,6 @@ export default function UpdateAppointmentForm() {
     } catch (error) {
       console.error("Error updating appointment:", error);
 
-      // Error message with SweetAlert2
       Swal.fire({
         title: "Error!",
         text: "There was an issue updating your appointment. Please try again.",
@@ -182,7 +179,7 @@ export default function UpdateAppointmentForm() {
             </div>
           </div>
 
-          {/* reason Field */}
+          {/* Reason Field */}
           <div>
             <label
               htmlFor="reason"
@@ -214,5 +211,13 @@ export default function UpdateAppointmentForm() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function UpdateAppointmentForm() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UpdateAppointmentFormContent />
+    </Suspense>
   );
 }

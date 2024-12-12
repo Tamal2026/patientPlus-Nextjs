@@ -1,4 +1,5 @@
 import { connectDB } from "@/app/lib/connectDB";
+import { NextResponse } from "next/server";
 import stripePackage from "stripe";
 
 const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
@@ -22,7 +23,7 @@ export async function POST(req) {
     
     const price = parseFloat(selectedDoctorPrice);
     if (isNaN(price) || price <= 0) {
-      return new Response(
+      return new NextResponse(
         JSON.stringify({ error: "Invalid selectedDoctorPrice provided" }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
@@ -74,8 +75,8 @@ export async function POST(req) {
     };
     await insertIfNotExists("appointments", { paymentIntentId: paymentIntent.id }, appointmentData);
 
-    // 5. Return Success Response
-    return new Response(
+    // 5. Return Success NextResponse
+    return new NextResponse(
       JSON.stringify({
         clientSecret: paymentIntent.client_secret,
         message: "Payment intent created and data saved to database",
@@ -84,7 +85,7 @@ export async function POST(req) {
     );
   } catch (error) {
     console.error("Error processing payment and saving data:", error);
-    return new Response(
+    return new NextResponse(
       JSON.stringify({ error: "Failed to process the request" }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );

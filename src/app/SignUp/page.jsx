@@ -19,7 +19,7 @@ export default function SignupPage() {
     };
 
     try {
-      const res = await fetch("http://localhost:3000/SignUp/api", {
+      const res = await fetch(` ${process.env.NEXT_PUBLIC_BASE_URL}/SignUp/api`, {
         method: "POST",
         body: JSON.stringify(newUser),
         headers: {

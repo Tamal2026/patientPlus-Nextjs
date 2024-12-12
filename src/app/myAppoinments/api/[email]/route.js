@@ -1,4 +1,5 @@
 import { connectDB } from "@/app/lib/connectDB";
+import { NextResponse } from "next/server";
 
 export const GET = async (request, { params }) => {
   try {
@@ -8,7 +9,7 @@ export const GET = async (request, { params }) => {
     const { email } = await params; 
 
     if (!email) {
-      return new Response(
+      return new NextResponse(
         JSON.stringify({ error: "Email parameter is missing" }),
         {
           status: 400,
@@ -22,7 +23,7 @@ export const GET = async (request, { params }) => {
       .toArray();
 
     if (myAppointments.length === 0) {
-      return new Response(
+      return new NextResponse(
         JSON.stringify({ message: "No appointments found" }),
         {
           status: 404,
@@ -31,13 +32,13 @@ export const GET = async (request, { params }) => {
       );
     }
 
-    return new Response(JSON.stringify({ bookings: myAppointments }), {
+    return new NextResponse(JSON.stringify({ bookings: myAppointments }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error("Error fetching appointments:", error);
-    return new Response(
+    return new NextResponse(
       JSON.stringify({ error: "Failed to fetch appointments" }),
       {
         status: 500,

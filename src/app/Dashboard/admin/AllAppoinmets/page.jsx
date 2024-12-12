@@ -9,7 +9,7 @@ export default function Page() {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await fetch("http://localhost:3000/AllAppoinmentsAdmin/api");
+        const response = await fetch(` ${process.env.NEXT_PUBLIC_BASE_URL}/AllAppoinmentsAdmin/api`);
         if (!response.ok) {
           throw new Error("Failed to fetch appointments");
         }

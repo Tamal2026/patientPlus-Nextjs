@@ -1,4 +1,5 @@
 import { connectDB } from "@/app/lib/connectDB";
+import { NextResponse } from "next/server";
 
 export const GET = async () => {
     try {
@@ -8,7 +9,7 @@ export const GET = async () => {
       const allUsers = await usersCollection.find({}).toArray();
   
       if (allUsers.length === 0) {
-        return new Response(
+        return new NextResponse(
           JSON.stringify({ users: [], message: "No users found" }),
           {
             status: 200,
@@ -24,7 +25,7 @@ export const GET = async () => {
         role: user.role,
       }));
   
-      return new Response(
+      return new NextResponse(
         JSON.stringify({
           users: formattedUsers,
           count: formattedUsers.length,
@@ -37,7 +38,7 @@ export const GET = async () => {
     } catch (error) {
       console.log("Error fetching users:", error);
   
-      return new Response(JSON.stringify({ error: "Failed to fetch users" }), {
+      return new NextResponse(JSON.stringify({ error: "Failed to fetch users" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });

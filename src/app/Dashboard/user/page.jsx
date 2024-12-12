@@ -12,7 +12,7 @@ export default function Page() {
       {/* Welcome Header */}
       <div className="text-center">
         <h1>Welcome,<span className="text-xl font-bold text-gray-800 ml-2">{session.data?.user.email}</span> </h1>
-        <p className="text-gray-500 my-3">Here's your dashboard at a PatientPlus:</p>
+        <p className="text-gray-500 my-3">Here is your dashboard at a PatientPlus:</p>
       </div>
 
       {/* Dashboard Cards */}

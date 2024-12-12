@@ -12,7 +12,7 @@ export default function Page() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/ServicesApi/api/get-all"
+          ` ${process.env.NEXT_PUBLIC_BASE_URL}/ServicesApi/api/get-all`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -32,7 +32,11 @@ export default function Page() {
   return (
     <div className="mt-20 px-4">
       <h1 className="text-3xl font-bold mb-6 text-center">Meet Our Experts</h1>
-      {loading && <h1>Please wait...</h1>}
+      {loading && (
+        <div className="flex justify-center items-center py-10">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-orange-600 border-solid"></div>
+        </div>
+      )}
       {data.map((service, index) => (
         <div key={index} className="mb-10 border-b pb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-2xl mx-auto">
@@ -50,9 +54,6 @@ export default function Page() {
                 <p className="text-sm text-gray-500">{expert.specialist}</p>
                 <p className="text-sm text-gray-600">{expert.degree}</p>
                 <p className="text-sm mb-10">{expert.short_desc}</p>
-
-              
-               
               </div>
             ))}
           </div>

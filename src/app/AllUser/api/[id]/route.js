@@ -1,5 +1,6 @@
 import { connectDB } from "@/app/lib/connectDB";
 import { ObjectId } from "mongodb";
+import { NextResponse } from "next/server";
 
 // API for deleting the user
 export const DELETE = async (req) => {
@@ -8,7 +9,7 @@ export const DELETE = async (req) => {
     const id = url.pathname.split("/").pop();
 
     if (!ObjectId.isValid(id)) {
-      return new Response(JSON.stringify({ error: "Invalid user ID" }), {
+      return new NextResponse(JSON.stringify({ error: "Invalid user ID" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
@@ -21,7 +22,7 @@ export const DELETE = async (req) => {
     const result = await usersCollection.deleteOne({ _id: new ObjectId(id) });
 
     if (result.deletedCount === 1) {
-      return new Response(
+      return new NextResponse(
         JSON.stringify({ message: "User deleted successfully" }),
         {
           status: 200,
@@ -29,14 +30,14 @@ export const DELETE = async (req) => {
         }
       );
     } else {
-      return new Response(JSON.stringify({ error: "User not found" }), {
+      return new NextResponse(JSON.stringify({ error: "User not found" }), {
         status: 404,
         headers: { "Content-Type": "application/json" },
       });
     }
   } catch (error) {
     console.error("Error deleting user:", error);
-    return new Response(JSON.stringify({ error: "Failed to delete user" }), {
+    return new NextResponse(JSON.stringify({ error: "Failed to delete user" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
@@ -55,7 +56,7 @@ export const PATCH = async (req, { params }) => {
       !resolvedParams.id ||
       !ObjectId.isValid(resolvedParams.id)
     ) {
-      return new Response(JSON.stringify({ error: "Invalid user ID" }), {
+      return new NextResponse(JSON.stringify({ error: "Invalid user ID" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
@@ -74,13 +75,13 @@ export const PATCH = async (req, { params }) => {
     );
 
     if (result.matchedCount === 0) {
-      return new Response(JSON.stringify({ error: "User not found" }), {
+      return new NextResponse(JSON.stringify({ error: "User not found" }), {
         status: 404,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    return new Response(
+    return new NextResponse(
       JSON.stringify({ message: "User updated successfully" }),
       {
         status: 200,
@@ -89,7 +90,7 @@ export const PATCH = async (req, { params }) => {
     );
   } catch (error) {
     console.error("Error updating user:", error);
-    return new Response(JSON.stringify({ error: "Failed to update user" }), {
+    return new NextResponse(JSON.stringify({ error: "Failed to update user" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });

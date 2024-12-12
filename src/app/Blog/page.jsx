@@ -13,7 +13,9 @@ export default function Blog() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch("http://localhost:3000/Blog/api");
+        const response = await fetch(
+          ` ${process.env.NEXT_PUBLIC_BASE_URL}/Blog/api`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch posts");
         }
@@ -36,7 +38,11 @@ export default function Blog() {
   }, []);
 
   if (loading) {
-    return <div className="mt-20">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center py-10 mt-10">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-orange-600 border-solid"></div>
+      </div>
+    );
   }
 
   if (error) {
@@ -110,37 +116,24 @@ export default function Blog() {
           {/* Our Services */}
           <div className="bg-white shadow-lg rounded-lg p-4">
             <h3 className="text-lg font-semibold mb-4">Our Services</h3>
-            <ul className="space-y-2 text-blue-600">
-              <Link href={"/ServiceDetailsPage/6735cc1e3fbb05ec0c097b56"}>
-                {" "}
-                <li className="hover:underline cursor-pointer">
-                  Bills & Insurance
-                </li>
-              </Link>
-              <Link href={"/ServiceDetailsPage/6735cc1e3fbb05ec0c097b57"}>
-                {" "}
-                <li className="hover:underline cursor-pointer">
-                  Cancer Screening
-                </li>
-              </Link>
-              <Link href={"ServiceDetailsPage/6735cc1e3fbb05ec0c097b55"}>
-                {" "}
-                <li className="hover:underline cursor-pointer">
-                  Cardiac Surgery
-                </li>
-              </Link>
-              <Link href={"/ServiceDetailsPage/6735cc1e3fbb05ec0c097b54"}>
-                {" "}
-                <li className="hover:underline cursor-pointer">Neurology</li>
-              </Link>
-              <Link href={"/ServiceDetailsPage/6735cc1e3fbb05ec0c097b58"}>
-                {" "}
-                <li className="hover:underline cursor-pointer">Orthopedics</li>
-              </Link>
-              <Link href={"/ServiceDetailsPage/6735cc1e3fbb05ec0c097b59"}>
-                {" "}
-                <li className="hover:underline cursor-pointer">Pediatrics</li>
-              </Link>
+            <ul>
+              <li className="hover:underline cursor-pointer">
+                Bills & Insurance
+              </li>
+
+              <li className="hover:underline cursor-pointer">
+                Cancer Screening
+              </li>
+
+              <li className="hover:underline cursor-pointer">
+                Cardiac Surgery
+              </li>
+
+              <li className="hover:underline cursor-pointer">Neurology</li>
+
+              <li className="hover:underline cursor-pointer">Orthopedics</li>
+
+              <li className="hover:underline cursor-pointer">Pediatrics</li>
             </ul>
           </div>
 

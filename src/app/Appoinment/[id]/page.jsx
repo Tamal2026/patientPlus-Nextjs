@@ -50,7 +50,7 @@ export default function AppointmentForm() {
     };
 
     const resp = await fetch(
-      "http://localhost:3000/Appoinment/api/newAppoinment",
+      ` ${process.env.NEXT_PUBLIC_BASE_URL}/Appoinment/api/newAppoinment`,
       {
         method: "POST",
         body: JSON.stringify(newAppointment),

@@ -83,7 +83,7 @@ export default function Page() {
       };
 
       const backendResponse = await fetch(
-        "http://localhost:3000/Dashboard/admin/api",
+        ` ${process.env.NEXT_PUBLIC_BASE_URL}/Dashboard/admin/api`,
         {
           method: "POST",
           headers: {

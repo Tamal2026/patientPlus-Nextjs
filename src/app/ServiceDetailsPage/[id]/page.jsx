@@ -3,8 +3,12 @@ import Link from "next/link";
 
 /* eslint-disable @next/next/no-img-element */
 const ServiceDetailsPage = async ({ params }) => {
-  const res = await fetch(`http://localhost:3000/ServicesApi/api/${params.id}`);
+  // Fetch service details based on the dynamic ID
+  const res = await fetch(` ${process.env.NEXT_PUBLIC_BASE_URL}/ServicesApi/api/${params.id}`, {
+    cache: "no-store", // Ensures fresh data in dynamic routes
+  });
 
+  // Handle non-OK response
   if (!res.ok) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -39,7 +43,7 @@ const ServiceDetailsPage = async ({ params }) => {
           <hr />
 
           {/* Experts Section */}
-          <h1 className=" text-2xl font-bold my-5 text-center bg-blue-500 p-3 text-white  w-1/6 mx-auto rounded-lg sm:w-1/2">
+          <h1 className="text-2xl font-bold my-5 text-center bg-blue-500 p-3 text-white w-1/6 mx-auto rounded-lg sm:w-1/2">
             Experts
           </h1>
 
@@ -48,7 +52,7 @@ const ServiceDetailsPage = async ({ params }) => {
             {data.service.expertise?.map((expert, index) => (
               <div
                 key={index}
-                className="text-center transform my-5 shadow-2xl transition duration-300 hover:scale-105 hover:shadow-lg p-4 rounded-lg bg-white "
+                className="text-center transform my-5 shadow-2xl transition duration-300 hover:scale-105 hover:shadow-lg p-4 rounded-lg bg-white"
               >
                 <img
                   alt={`Expert ${expert.name}`}
@@ -60,7 +64,6 @@ const ServiceDetailsPage = async ({ params }) => {
                 </p>
                 <p className="text-sm text-gray-500">{expert.specialist}</p>
                 <p className="text-xs text-gray-400">{expert.degree}</p>
-               
               </div>
             ))}
           </div>

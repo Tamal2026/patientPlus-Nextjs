@@ -1,5 +1,6 @@
 import { connectDB } from "@/app/lib/connectDB";
 import { ObjectId } from "mongodb";
+import { NextResponse } from "next/server";
 
 export const DELETE = async (request, { params }) => {
   try {
@@ -11,7 +12,7 @@ export const DELETE = async (request, { params }) => {
     });
 
     if (result.deletedCount === 0) {
-      return new Response(
+      return new NextResponse(
         JSON.stringify({ error: "No booking found with the given ID" }),
         {
           status: 404,
@@ -20,7 +21,7 @@ export const DELETE = async (request, { params }) => {
       );
     }
 
-    return new Response(
+    return new NextResponse(
       JSON.stringify({ message: "Booking deleted successfully" }),
       {
         status: 200,
@@ -29,7 +30,7 @@ export const DELETE = async (request, { params }) => {
     );
   } catch (error) {
     console.error("Error deleting booking:", error);
-    return new Response(JSON.stringify({ error: "Failed to delete booking" }), {
+    return new NextResponse(JSON.stringify({ error: "Failed to delete booking" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
@@ -58,7 +59,7 @@ const updateDoc = await request.json()
     );
 
     if (result.deletedCount === 0) {
-      return new Response(
+      return new NextResponse(
         JSON.stringify({ error: "No booking found with the given ID" }),
         {
           status: 404,
@@ -67,7 +68,7 @@ const updateDoc = await request.json()
       );
     }
 
-    return new Response(
+    return new NextResponse(
       JSON.stringify({ message: "Booking updated successfully" ,}),
       {
         status: 200,
@@ -76,7 +77,7 @@ const updateDoc = await request.json()
     );
   } catch (error) {
     console.error("Error deleting booking:", error);
-    return new Response(JSON.stringify({ error: "Failed to update booking" }), {
+    return new NextResponse(JSON.stringify({ error: "Failed to update booking" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
@@ -94,7 +95,7 @@ export const GET = async (request, { params }) => {
     });
 
     if (result.deletedCount === 0) {
-      return new Response(
+      return new NextResponse(
         JSON.stringify({ error: "No booking found with the given ID" }),
         {
           status: 404,
@@ -103,7 +104,7 @@ export const GET = async (request, { params }) => {
       );
     }
 
-    return new Response(
+    return new NextResponse(
       JSON.stringify({ message: "Booking GET successfully" }),
       {
         status: 200,
@@ -112,7 +113,7 @@ export const GET = async (request, { params }) => {
     );
   } catch (error) {
     console.error("Error deleting booking:", error);
-    return new Response(JSON.stringify({ error: "Failed to get booking" }), {
+    return new NextResponse(JSON.stringify({ error: "Failed to get booking" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });

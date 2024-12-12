@@ -8,8 +8,10 @@ export default function AiFeature() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // ${process.env.NEXT_PUBLIC_BASE_URL}
+
     try {
-      const res = await fetch("http://localhost:3000/Ai/api/AiBackend", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/Ai/api/AiBackend`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),

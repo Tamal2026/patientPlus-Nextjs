@@ -1,23 +1,33 @@
 import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export const middleware = (request) => {
-  // Extract the JWT token from cookies
-  const token = request.cookies.get("token");
-
-  // Define the login and protected paths
+export const middleware = async (request) => {
+  // Define the login page path
   const loginPage = "/Login";
-  const protectedPath = request.nextUrl.pathname;
 
- 
-  if (!token) {
+  try {
+    // Extract the token using next-auth's JWT utility
+    const token = await getToken({
+      req: request,
+      secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
+    });
+
+    // If no token is found, redirect to the login page
+    if (!token || !token.email) {
+      return NextResponse.redirect(new URL(loginPage, request.url));
+    }
+
+    // If the token exists, allow the request to proceed
+    return NextResponse.next();
+  } catch (error) {
+    console.error("Middleware error:", error);
+
+    // Redirect to login on error (fail-safe)
     return NextResponse.redirect(new URL(loginPage, request.url));
   }
-
-  
-  return NextResponse.next();
 };
 
 export const config = {
-  // Add matchers for the paths you want to protect
-  matcher: ["/about", "/Dashboard/:path*"], // Example protected routes
+  // Protect specific routes
+  matcher: ["/about", "/MakeAppoinment", "/Dashboard/:path*"],
 };

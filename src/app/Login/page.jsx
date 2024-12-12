@@ -18,9 +18,40 @@ export default function LoginPage() {
     });
 
     if (res.ok) {
-     
+      console.log("Login successful");
+      // Redirect user or perform additional actions here
     } else {
       console.error("Login failed:", res.error);
+    }
+  };
+
+  const handleAdminLogin = async () => {
+    const res = await signIn("credentials", {
+      email: "admin@example.com",
+      password: "admin12", 
+      redirect: false,
+    });
+
+    if (res.ok) {
+      console.log("Admin login successful");
+      
+    } else {
+      console.error("Admin login failed:", res.error);
+    }
+  };
+
+  const handleUserLogin = async () => {
+    const res = await signIn("credentials", {
+      email: "user@example.com", // Replace with your user email
+      password: "user123", // Replace with your user password
+      redirect: false,
+    });
+
+    if (res.ok) {
+      console.log("User login successful");
+      // Redirect user to dashboard
+    } else {
+      console.error("User login failed:", res.error);
     }
   };
 
@@ -63,17 +94,33 @@ export default function LoginPage() {
             </div>
 
             <button
-              type="submit" // Ensure the button type is submit
+              type="submit"
               className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
             >
               Login
             </button>
           </form>
 
-          <SocialLogin></SocialLogin>
+          <SocialLogin />
+
+          {/* Admin and User Login Buttons */}
+          <div className="mt-6  flex items-center w-2/3 mx-auto gap-10">
+            <button
+              onClick={handleAdminLogin}
+              className="w-full py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+            >
+              Admin Login
+            </button>
+            <button
+              onClick={handleUserLogin}
+              className="w-full py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+            >
+              User Login
+            </button>
+          </div>
 
           <p className="mt-4 text-center text-sm">
-            Don't have an account?{" "}
+            Do not have an account?{" "}
             <a href="/SignUp" className="text-blue-500 hover:underline">
               Sign Up
             </a>
