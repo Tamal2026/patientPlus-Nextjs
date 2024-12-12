@@ -1,7 +1,9 @@
+"use client"
+
 /* eslint-disable react-hooks/exhaustive-deps */
 {/* eslint-disable-next-line react/no-unescaped-entities */}
 
-"use client"
+
 
 import React, { useEffect, useState } from "react";
 

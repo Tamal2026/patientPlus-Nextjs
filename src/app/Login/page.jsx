@@ -1,6 +1,8 @@
+
+"use client";
 /* eslint-disable @next/next/no-img-element */
 {/* eslint-disable-next-line react/no-unescaped-entities */}
-"use client";
+
 
 import SocialLogin from "@/components/Shared/SocialLogin/page";
 import { signIn } from "next-auth/react";
