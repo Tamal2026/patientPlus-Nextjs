@@ -1,9 +1,6 @@
-"use client"
-
-/* eslint-disable react-hooks/exhaustive-deps */
 {/* eslint-disable-next-line react/no-unescaped-entities */}
 
-
+"use client"
 
 import React, { useEffect, useState } from "react";
 
@@ -38,7 +35,7 @@ export default function Page() {
     for (const key in targets) {
       updateCount(key, targets[key]);
     }
-  }, [targets]);
+  },);
 
   return (
     <div className="bg-gray-800 text-white py-10 my-5">

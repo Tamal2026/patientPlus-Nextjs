@@ -1,5 +1,4 @@
-"use client"
-{/* eslint-disable-next-line react/no-unescaped-entities */}
+"use client";
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import React from 'react';
@@ -7,13 +6,15 @@ import React from 'react';
 export default function Page() {
   const session = useSession();
 
-
   return (
     <div className="mt-20 px-4 md:px-20 flex flex-col items-center space-y-6 sm:h-screen">
       {/* Welcome Header */}
       <div className="text-center">
-        <h1>Welcome,<span className="text-xl font-bold text-gray-800 ml-2">{session.data?.user.email}</span> </h1>
-        <p className="text-gray-500 my-3">Here is your dashboard at a PatientPlus:</p>
+        <h1>
+          Welcome,
+          <span className="text-xl font-bold text-gray-800 ml-2">{session.data?.user.email}</span>
+        </h1>
+        <p className="text-gray-500 my-3">Here&apos;s your dashboard at PatientPlus:</p>
       </div>
 
       {/* Dashboard Cards */}
