@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+{/* eslint-disable-next-line react/no-unescaped-entities */}
 "use client";
 
 import SocialLogin from "@/components/Shared/SocialLogin/page";
@@ -120,7 +121,7 @@ export default function LoginPage() {
           </div>
 
           <p className="mt-4 text-center text-sm">
-            Do not have an account?{" "}
+            Don&apost not have an account?{" "}
             <a href="/SignUp" className="text-blue-500 hover:underline">
               Sign Up
             </a>
