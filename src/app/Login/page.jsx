@@ -1,10 +1,13 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
+import { useRouter } from "next/navigation";
 import SocialLogin from "@/components/Shared/SocialLogin/page";
 import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
+  const router = useRouter();
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -19,7 +22,7 @@ export default function LoginPage() {
 
     if (res.ok) {
       console.log("Login successful");
-      // Redirect user or perform additional actions here
+      router.push("/"); // Redirect to home page
     } else {
       console.error("Login failed:", res.error);
     }
@@ -34,7 +37,7 @@ export default function LoginPage() {
 
     if (res.ok) {
       console.log("Admin login successful");
-      // Redirect admin or perform additional actions
+      router.push("/"); // Redirect to home page
     } else {
       console.error("Admin login failed:", res.error);
     }
@@ -49,7 +52,7 @@ export default function LoginPage() {
 
     if (res.ok) {
       console.log("User login successful");
-      // Redirect user to dashboard
+      router.push("/"); // Redirect to home page
     } else {
       console.error("User login failed:", res.error);
     }

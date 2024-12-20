@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -19,10 +19,14 @@ export default function NavBar() {
     { name: "Services", href: "/Service" },
     { name: "Blog", href: "/Blog" },
     { name: "Contact us", href: "/Contact" },
-    ...(session?.user?.role === "admin"
-      ? [{ name: "Dashboard", href: "/Dashboard/admin" }]
-      : [{ name: "Dashboard", href: "/Dashboard/user" }]),
   ];
+
+  if (session) {
+    navLinks.push({
+      name: "Dashboard",
+      href: session?.user?.role === "admin" ? "/Dashboard/admin" : "/Dashboard/user",
+    });
+  }
 
   const NavLink = ({ name, href, delay }) => (
     <Link
@@ -79,7 +83,6 @@ export default function NavBar() {
             ) : (
               <Link href="/Login">
                 <button
-                  onClick={() => signIn()}
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg"
                 >
                   Login
