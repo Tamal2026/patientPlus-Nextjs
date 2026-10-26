@@ -5,11 +5,6 @@ PatientPlus is a comprehensive hospital management system built using Next.js an
 
 ## Features
 
-### General Features
-- **Responsive Design**: Works seamlessly on all devices.
-- **Secure Authentication**: Includes user authentication and role-based authorization using `next-auth`.
-- **Dynamic Routing**: Role-based navigation for admins and users.
-
 ### Patient Features
 - **Book Appointments**: Patients can easily book appointments with doctors.
 - **View Appointment History**: Patients can view their scheduled and past appointments.
